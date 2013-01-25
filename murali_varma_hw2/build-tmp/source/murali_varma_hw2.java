@@ -26,7 +26,7 @@ final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
 
 final int NUM_CREATURES = 10;
 
-int edgeBehavior = TOROIDAL_MODE;
+int edgeBehavior = REFLECT_MODE;
 int backgroundClearingBehavior = FADE_BACKGROUND_EVERY_DRAW_CYCLE;
 
 Creature[] creatures;
@@ -42,8 +42,9 @@ public void setup() {
 public void drawBackground() {
 	if (backgroundClearingBehavior == FADE_BACKGROUND_EVERY_DRAW_CYCLE) {
 		fill(0,10);
-		// rectMode(CORNER);
 		rect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+		fill(0);
+		rect(SCREEN_WIDTH,0,CONTROLS_WIDTH,SCREEN_HEIGHT);
 	}
 }
 
@@ -110,7 +111,16 @@ class Creature {
 			if (posY < 0) {
 				posY = 1;
 			}
-
+		}
+		else {
+			if (posX > 1 || posX < 0) {
+				velX *= -1;
+				posX += 2 * velX;
+			}
+			if (posY > 1 || posY < 0) {
+				velY *= -1;
+				posY += 2 * velY;
+			}
 		}
 	}
 };
