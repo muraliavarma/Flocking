@@ -18,12 +18,18 @@ final int SCREEN_WIDTH = 800;
 final int SCREEN_HEIGHT = 800;
 final int CONTROLS_WIDTH = 100;
 
-final int NUM_CREATURES = 10;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
+final int CLEAR_SCREEN_EVERY_DRAW_CYCLE = 0;
+final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
+
+final int NUM_CREATURES = 10;
+
+int edgeBehavior = TOROIDAL_MODE;
+int backgroundClearingBehavior = FADE_BACKGROUND_EVERY_DRAW_CYCLE;
+
 Creature[] creatures;
-int edge_behavior = TOROIDAL_MODE;
 
 public void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -31,6 +37,14 @@ public void setup() {
 	stroke(100);
 
 	initCreatures();
+}
+
+public void drawBackground() {
+	if (backgroundClearingBehavior == FADE_BACKGROUND_EVERY_DRAW_CYCLE) {
+		fill(0,10);
+		// rectMode(CORNER);
+		rect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+	}
 }
 
 public void initCreatures() {
@@ -41,6 +55,7 @@ public void initCreatures() {
 }
 
 public void drawCreatures() {
+	fill(255);
 	for (int i = 0; i < NUM_CREATURES; i++) {
 		creatures[i].draw();
 	}
@@ -53,7 +68,7 @@ public void updateCreatures() {
 }
 
 public void draw() {
-	background(100, 0.1f);
+	drawBackground();
 	updateCreatures();
 	drawCreatures();
 }
@@ -82,7 +97,7 @@ class Creature {
 		posX += velX;
 		posY += velY;
 
-		if (edge_behavior == TOROIDAL_MODE) {
+		if (edgeBehavior == TOROIDAL_MODE) {
 			if (posX > 1) {
 				posX = 0;
 			}
