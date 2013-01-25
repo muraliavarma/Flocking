@@ -27,7 +27,7 @@ final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
 final int NUM_CREATURES = 10;
 
 int edgeBehavior = REFLECT_MODE;
-int backgroundClearingBehavior = FADE_BACKGROUND_EVERY_DRAW_CYCLE;
+int backgroundAlpha = 100;
 
 Creature[] creatures;
 
@@ -40,12 +40,10 @@ public void setup() {
 }
 
 public void drawBackground() {
-	if (backgroundClearingBehavior == FADE_BACKGROUND_EVERY_DRAW_CYCLE) {
-		fill(0,10);
-		rect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-		fill(0);
-		rect(SCREEN_WIDTH,0,CONTROLS_WIDTH,SCREEN_HEIGHT);
-	}
+	fill(0,backgroundAlpha);
+	rect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+	fill(0);	//draw controls without any alpha value so that ball trails will not be drawn in the control area
+	rect(SCREEN_WIDTH,0,CONTROLS_WIDTH,SCREEN_HEIGHT);
 }
 
 public void initCreatures() {
@@ -113,9 +111,10 @@ class Creature {
 			}
 		}
 		else {
+			//reflect mode
 			if (posX > 1 || posX < 0) {
 				velX *= -1;
-				posX += 2 * velX;
+				posX += 2 * velX;	//to compensate for creature having gone out of screen
 			}
 			if (posY > 1 || posY < 0) {
 				velY *= -1;
