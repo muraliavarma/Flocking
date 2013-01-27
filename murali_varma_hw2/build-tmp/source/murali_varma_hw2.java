@@ -27,9 +27,7 @@ final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
 final int NUM_CREATURES = 10;
 
 int edgeBehavior = REFLECT_MODE;
-int backgroundAlpha = 100;
-
-Creature[] creatures;
+int backgroundAlpha = 100;	//0 for full trail, 100 for no trail
 
 public void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -72,57 +70,60 @@ public void draw() {
 	drawCreatures();
 }
 
+Creature[] creatures;
+
 class Creature {
-	float posX;
-	float posY;
+  float posX;
+  float posY;
 
-	float velX;
-	float velY;
+  float velX;
+  float velY;
 
-	float radius = 10;
+  float radius = 2;
 
-	Creature() {
-		posX = random(1);
-		posY = random(1);
-		velX = 0.01f - random(0.02f);
-		velY = 0.01f - random(0.02f);
-	}
+  Creature() {
+    posX = random(1);
+    posY = random(1);
+    velX = 0.01f - random(0.02f);
+    velY = 0.01f - random(0.02f);
+  }
 
-	public void draw() {
-		arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
-	}
+  public void draw() {
+    arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
+  }
 
-	public void update() {
-		posX += velX;
-		posY += velY;
+  public void update() {
+    posX += velX;
+    posY += velY;
 
-		if (edgeBehavior == TOROIDAL_MODE) {
-			if (posX > 1) {
-				posX = 0;
-			}
-			if (posY > 1) {
-				posY = 0;
-			}
-			if (posX < 0) {
-				posX = 1;
-			}
-			if (posY < 0) {
-				posY = 1;
-			}
-		}
-		else {
-			//reflect mode
-			if (posX > 1 || posX < 0) {
-				velX *= -1;
-				posX += 2 * velX;	//to compensate for creature having gone out of screen
-			}
-			if (posY > 1 || posY < 0) {
-				velY *= -1;
-				posY += 2 * velY;
-			}
-		}
-	}
+    if (edgeBehavior == TOROIDAL_MODE) {
+      if (posX > 1) {
+        posX = 0;
+      }
+      if (posY > 1) {
+        posY = 0;
+      }
+      if (posX < 0) {
+        posX = 1;
+      }
+      if (posY < 0) {
+        posY = 1;
+      }
+    }
+    else {
+      //reflect mode
+      if (posX > 1 || posX < 0) {
+        velX *= -1;
+        posX += 2 * velX; //to compensate for creature having gone out of screen
+      }
+      if (posY > 1 || posY < 0) {
+        velY *= -1;
+        posY += 2 * velY;
+      }
+    }
+  }
 };
+
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "murali_varma_hw2" };
     if (passedArgs != null) {
