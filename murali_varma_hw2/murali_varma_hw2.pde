@@ -6,8 +6,8 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
-final int CLEAR_SCREEN_EVERY_DRAW_CYCLE = 0;
-final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
+// final int CLEAR_SCREEN_EVERY_DRAW_CYCLE = 0;
+// final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
 
 final int NUM_CREATURES = 10;
 
