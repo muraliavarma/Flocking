@@ -6,13 +6,16 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
-// final int CLEAR_SCREEN_EVERY_DRAW_CYCLE = 0;
-// final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
-
 final int NUM_CREATURES = 10;
 
 int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 100 for no trail
+
+//flock centering, velocity matching, collision avoidance, wandering force
+boolean flockCenteringForce = true;
+boolean velocityMatchingForce = true;
+boolean collisionAvoidanceForce = true;
+boolean wanderingForce = true;
 
 void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -51,6 +54,7 @@ void updateCreatures() {
 
 void draw() {
 	drawBackground();
+	computeNeighborGrids();
 	updateCreatures();
 	drawCreatures();
 }

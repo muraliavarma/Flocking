@@ -21,6 +21,7 @@ class Creature {
 	}
 
 	void update() {
+		applyForces();
 		posX += velX;
 		posY += velY;
 
@@ -49,5 +50,14 @@ class Creature {
 				posY += 2 * velY;
 			}
 		}
+	}
+
+	void applyForces() {
+		//apply the 3 forces to the creature and update its x and y velocities
+		
+	}
+
+	Creature[] getNeighbors(float radius) {
+		return null;
 	}
 };

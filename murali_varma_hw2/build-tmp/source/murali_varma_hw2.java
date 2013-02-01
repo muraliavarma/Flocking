@@ -21,13 +21,16 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
-final int CLEAR_SCREEN_EVERY_DRAW_CYCLE = 0;
-final int FADE_BACKGROUND_EVERY_DRAW_CYCLE = 1;
-
 final int NUM_CREATURES = 10;
 
 int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 100 for no trail
+
+//flock centering, velocity matching, collision avoidance, wandering force
+boolean flockCenteringForce = true;
+boolean velocityMatchingForce = true;
+boolean collisionAvoidanceForce = true;
+boolean wanderingForce = true;
 
 public void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -66,6 +69,7 @@ public void updateCreatures() {
 
 public void draw() {
 	drawBackground();
+	computeNeighborGrids();
 	updateCreatures();
 	drawCreatures();
 }
@@ -93,6 +97,7 @@ class Creature {
 	}
 
 	public void update() {
+		applyForces();
 		posX += velX;
 		posY += velY;
 
@@ -122,8 +127,21 @@ class Creature {
 			}
 		}
 	}
+
+	public void applyForces() {
+		//apply the 3 forces to the creature and update its x and y velocities
+		
+	}
+
+	public Creature[] getNeighbors(float radius) {
+		return null;
+	}
 };
 
+public void computeNeighborGrids() {
+	//use active forces and compute separate neighbor grids for each force
+	print(wanderingForce);
+}
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "murali_varma_hw2" };
     if (passedArgs != null) {
