@@ -37,6 +37,7 @@ public void setup() {
 	background(0);
 	stroke(100);
 
+	initNeighborGrids();
 	initCreatures();
 }
 
@@ -130,7 +131,7 @@ class Creature {
 
 	public void applyForces() {
 		//apply the 3 forces to the creature and update its x and y velocities
-		
+
 	}
 
 	public Creature[] getNeighbors(float radius) {
@@ -138,9 +139,29 @@ class Creature {
 	}
 };
 
+final float FLOCK_CENTERING_RADIUS = 0.2f;
+
+HashMap flockCenterGrid;
+
+public void initNeighborGrids() {
+	flockCenterGrid = new HashMap();
+}
+
 public void computeNeighborGrids() {
 	//use active forces and compute separate neighbor grids for each force
-	print(wanderingForce);
+	float radius = FLOCK_CENTERING_RADIUS;
+	flockCenterGrid.clear();
+	for (int i = 0; i < NUM_CREATURES; i++) {
+		String key = PApplet.parseInt(creatures[i].posX/radius) + "," + PApplet.parseInt(creatures[i].posY/radius);
+		ArrayList val = (ArrayList)flockCenterGrid.get(key);
+		if (val != null) {
+			val.add(i);
+		}
+		else {
+			flockCenterGrid.put(key, new ArrayList());
+		}
+	}
+
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "murali_varma_hw2" };

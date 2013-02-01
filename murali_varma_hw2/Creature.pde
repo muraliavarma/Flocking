@@ -54,7 +54,7 @@ class Creature {
 
 	void applyForces() {
 		//apply the 3 forces to the creature and update its x and y velocities
-		
+
 	}
 
 	Creature[] getNeighbors(float radius) {

@@ -22,6 +22,7 @@ void setup() {
 	background(0);
 	stroke(100);
 
+	initNeighborGrids();
 	initCreatures();
 }
 
