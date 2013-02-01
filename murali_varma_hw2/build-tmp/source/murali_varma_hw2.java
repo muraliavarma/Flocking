@@ -51,7 +51,7 @@ public void drawBackground() {
 public void initCreatures() {
 	creatures = new Creature[NUM_CREATURES];
 	for (int i = 0; i < NUM_CREATURES; i++) {
-		creatures[i] = new Creature();
+		creatures[i] = new Creature(i);
 	}
 }
 
@@ -78,6 +78,8 @@ public void draw() {
 Creature[] creatures;
 
 class Creature {
+	int idx;
+
 	float posX;
 	float posY;
 
@@ -86,18 +88,37 @@ class Creature {
 
 	float radius = 10;
 
-	Creature() {
+	ArrayList neighbors;
+
+	Creature(int i) {
+		idx = i;
 		posX = random(1);
 		posY = random(1);
-		velX = 0.01f - random(0.02f);
-		velY = 0.01f - random(0.02f);
+		velX = 0.001f - random(0.002f);
+		velY = 0.001f - random(0.002f);
+
+		neighbors = new ArrayList();
 	}
 
 	public void draw() {
+		if (idx == 0) {
+			println (neighbors);
+			arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, FLOCK_CENTERING_RADIUS * SCREEN_WIDTH, FLOCK_CENTERING_RADIUS * SCREEN_HEIGHT, 0, 2 * PI);
+		}
+		if (idx == 0) {
+			fill (100, 0, 0);
+		}
+		else if (neighbors.contains(0)) {
+			fill (0, 100, 0);
+		}
+		else {
+			fill (255);
+		}
 		arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
 	}
 
 	public void update() {
+		neighbors = getNeighbors(FLOCK_CENTERING_RADIUS);
 		applyForces();
 		posX += velX;
 		posY += velY;
@@ -134,8 +155,8 @@ class Creature {
 
 	}
 
-	public Creature[] getNeighbors(float radius) {
-		return null;
+	public ArrayList getNeighbors(float radius) {
+		return getNearestNeighbors(idx, radius);
 	}
 };
 
@@ -162,6 +183,34 @@ public void computeNeighborGrids() {
 		}
 	}
 
+}
+
+public ArrayList getNearestNeighbors(int idx, float radius) {
+	ArrayList ret = new ArrayList();
+	int x = PApplet.parseInt(creatures[idx].posX/radius);
+	int y = PApplet.parseInt(creatures[idx].posY/radius);
+
+	//this is valid only for reflecting walls
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			if (x + i < 0 || y + j < 0 || x + i >= 1.0f/radius || y + j >= 1.0f/radius) {
+				continue;
+			}
+			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get((x + i) + "," + (y + j));
+			if (cellCreatures == null) {
+				continue;
+			}
+			for (int k = 0; k < cellCreatures.size(); k++) {
+				Creature cellCreature = creatures[PApplet.parseInt(cellCreatures.get(k).toString())];
+				float diffX = cellCreature.posX - creatures[idx].posX;
+				float diffY = cellCreature.posY - creatures[idx].posY;
+				if (diffX * diffX + diffY * diffY <= FLOCK_CENTERING_RADIUS * FLOCK_CENTERING_RADIUS) {
+					ret.add(cellCreature.idx);
+				}
+			}
+		}
+	}
+	return ret;
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "murali_varma_hw2" };

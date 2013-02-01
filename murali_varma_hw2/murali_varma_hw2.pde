@@ -36,7 +36,7 @@ void drawBackground() {
 void initCreatures() {
 	creatures = new Creature[NUM_CREATURES];
 	for (int i = 0; i < NUM_CREATURES; i++) {
-		creatures[i] = new Creature();
+		creatures[i] = new Creature(i);
 	}
 }
 
