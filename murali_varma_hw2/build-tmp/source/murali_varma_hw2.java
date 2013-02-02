@@ -24,7 +24,7 @@ final int TOROIDAL_MODE = 1;
 final int NUM_CREATURES = 10;
 
 int edgeBehavior = REFLECT_MODE;
-int backgroundAlpha = 100;	//0 for full trail, 100 for no trail
+int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;
@@ -75,6 +75,18 @@ public void draw() {
 	drawCreatures();
 }
 
+public void keyPressed() {
+	if (key == 'q') {
+		noLoop();
+	}
+	else if(key == 'w') {
+		noLoop();
+		redraw();
+	}
+	else {
+		loop();
+	}
+}
 Creature[] creatures;
 
 class Creature {
@@ -94,26 +106,14 @@ class Creature {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
-		velX = 0.001f - random(0.002f);
-		velY = 0.001f - random(0.002f);
+		velX = 0.002f - random(0.004f);
+		velY = 0.002f - random(0.004f);
 
 		neighbors = new ArrayList();
 	}
 
 	public void draw() {
-		if (idx == 0) {
-			println (neighbors);
-			arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, FLOCK_CENTERING_RADIUS * SCREEN_WIDTH, FLOCK_CENTERING_RADIUS * SCREEN_HEIGHT, 0, 2 * PI);
-		}
-		if (idx == 0) {
-			fill (100, 0, 0);
-		}
-		else if (neighbors.contains(0)) {
-			fill (0, 100, 0);
-		}
-		else {
-			fill (255);
-		}
+		fill (255);
 		arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
 	}
 
@@ -175,14 +175,11 @@ public void computeNeighborGrids() {
 	for (int i = 0; i < NUM_CREATURES; i++) {
 		String key = PApplet.parseInt(creatures[i].posX/radius) + "," + PApplet.parseInt(creatures[i].posY/radius);
 		ArrayList val = (ArrayList)flockCenterGrid.get(key);
-		if (val != null) {
-			val.add(i);
-		}
-		else {
+		if (val == null) {
 			flockCenterGrid.put(key, new ArrayList());
 		}
+		((ArrayList)flockCenterGrid.get(key)).add(i);
 	}
-
 }
 
 public ArrayList getNearestNeighbors(int idx, float radius) {
@@ -190,10 +187,10 @@ public ArrayList getNearestNeighbors(int idx, float radius) {
 	int x = PApplet.parseInt(creatures[idx].posX/radius);
 	int y = PApplet.parseInt(creatures[idx].posY/radius);
 
-	//this is valid only for reflecting walls
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
-			if (x + i < 0 || y + j < 0 || x + i >= 1.0f/radius || y + j >= 1.0f/radius) {
+			//this is valid only for reflecting walls
+			if (x + i < 0 || y + j < 0 || x + i > 1.0f/radius || y + j > 1.0f/radius) {
 				continue;
 			}
 			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get((x + i) + "," + (y + j));
@@ -202,6 +199,9 @@ public ArrayList getNearestNeighbors(int idx, float radius) {
 			}
 			for (int k = 0; k < cellCreatures.size(); k++) {
 				Creature cellCreature = creatures[PApplet.parseInt(cellCreatures.get(k).toString())];
+				if (cellCreature.idx == idx) {
+					continue;
+				}
 				float diffX = cellCreature.posX - creatures[idx].posX;
 				float diffY = cellCreature.posY - creatures[idx].posY;
 				if (diffX * diffX + diffY * diffY <= FLOCK_CENTERING_RADIUS * FLOCK_CENTERING_RADIUS) {
@@ -211,6 +211,26 @@ public ArrayList getNearestNeighbors(int idx, float radius) {
 		}
 	}
 	return ret;
+}
+
+//DEBUG stuff
+
+public void printGrid(int radius) {
+	for (int i = 0; i <= 1.0f/radius; i++) {
+		for (int j = 0; j <= 1.0f/radius; j++) {
+			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get(i + "," + j);
+			if (cellCreatures == null) {
+				continue;
+			}
+			String items = "";
+			for (int k = 0; k < cellCreatures.size(); k++) {
+				Creature cellCreature = creatures[PApplet.parseInt(cellCreatures.get(k).toString())];
+				items += cellCreature.idx + ", ";
+			}
+			println("x = " + i + ", y = " + j + ": " + items);
+		}
+	}
+	println("---");
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "murali_varma_hw2" };

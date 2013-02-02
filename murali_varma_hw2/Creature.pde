@@ -17,26 +17,14 @@ class Creature {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
-		velX = 0.001 - random(0.002);
-		velY = 0.001 - random(0.002);
+		velX = 0.002 - random(0.004);
+		velY = 0.002 - random(0.004);
 
 		neighbors = new ArrayList();
 	}
 
 	void draw() {
-		if (idx == 0) {
-			println (neighbors);
-			arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, FLOCK_CENTERING_RADIUS * SCREEN_WIDTH, FLOCK_CENTERING_RADIUS * SCREEN_HEIGHT, 0, 2 * PI);
-		}
-		if (idx == 0) {
-			fill (100, 0, 0);
-		}
-		else if (neighbors.contains(0)) {
-			fill (0, 100, 0);
-		}
-		else {
-			fill (255);
-		}
+		fill (255);
 		arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
 	}
 

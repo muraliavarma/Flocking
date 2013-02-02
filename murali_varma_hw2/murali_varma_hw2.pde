@@ -9,7 +9,7 @@ final int TOROIDAL_MODE = 1;
 final int NUM_CREATURES = 10;
 
 int edgeBehavior = REFLECT_MODE;
-int backgroundAlpha = 100;	//0 for full trail, 100 for no trail
+int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;
@@ -60,3 +60,15 @@ void draw() {
 	drawCreatures();
 }
 
+void keyPressed() {
+	if (key == 'q') {
+		noLoop();
+	}
+	else if(key == 'w') {
+		noLoop();
+		redraw();
+	}
+	else {
+		loop();
+	}
+}

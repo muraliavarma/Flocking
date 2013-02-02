@@ -13,14 +13,11 @@ void computeNeighborGrids() {
 	for (int i = 0; i < NUM_CREATURES; i++) {
 		String key = int(creatures[i].posX/radius) + "," + int(creatures[i].posY/radius);
 		ArrayList val = (ArrayList)flockCenterGrid.get(key);
-		if (val != null) {
-			val.add(i);
-		}
-		else {
+		if (val == null) {
 			flockCenterGrid.put(key, new ArrayList());
 		}
+		((ArrayList)flockCenterGrid.get(key)).add(i);
 	}
-
 }
 
 ArrayList getNearestNeighbors(int idx, float radius) {
@@ -28,10 +25,10 @@ ArrayList getNearestNeighbors(int idx, float radius) {
 	int x = int(creatures[idx].posX/radius);
 	int y = int(creatures[idx].posY/radius);
 
-	//this is valid only for reflecting walls
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
-			if (x + i < 0 || y + j < 0 || x + i >= 1.0/radius || y + j >= 1.0/radius) {
+			//this is valid only for reflecting walls
+			if (x + i < 0 || y + j < 0 || x + i > 1.0/radius || y + j > 1.0/radius) {
 				continue;
 			}
 			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get((x + i) + "," + (y + j));
@@ -40,6 +37,9 @@ ArrayList getNearestNeighbors(int idx, float radius) {
 			}
 			for (int k = 0; k < cellCreatures.size(); k++) {
 				Creature cellCreature = creatures[int(cellCreatures.get(k).toString())];
+				if (cellCreature.idx == idx) {
+					continue;
+				}
 				float diffX = cellCreature.posX - creatures[idx].posX;
 				float diffY = cellCreature.posY - creatures[idx].posY;
 				if (diffX * diffX + diffY * diffY <= FLOCK_CENTERING_RADIUS * FLOCK_CENTERING_RADIUS) {
@@ -49,4 +49,24 @@ ArrayList getNearestNeighbors(int idx, float radius) {
 		}
 	}
 	return ret;
+}
+
+//DEBUG stuff
+
+void printGrid(int radius) {
+	for (int i = 0; i <= 1.0/radius; i++) {
+		for (int j = 0; j <= 1.0/radius; j++) {
+			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get(i + "," + j);
+			if (cellCreatures == null) {
+				continue;
+			}
+			String items = "";
+			for (int k = 0; k < cellCreatures.size(); k++) {
+				Creature cellCreature = creatures[int(cellCreatures.get(k).toString())];
+				items += cellCreature.idx + ", ";
+			}
+			println("x = " + i + ", y = " + j + ": " + items);
+		}
+	}
+	println("---");
 }
