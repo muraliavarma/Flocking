@@ -61,6 +61,7 @@ void draw() {
 }
 
 void keyPressed() {
+	//simulation
 	if (key == 'q') {
 		noLoop();
 	}
@@ -70,5 +71,10 @@ void keyPressed() {
 	}
 	else {
 		loop();
+	}
+
+	//forces
+	if (key == '4') {
+		wanderingForce = !wanderingForce;
 	}
 }

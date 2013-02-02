@@ -9,6 +9,9 @@ class Creature {
 	float velX;
 	float velY;
 
+	float forceX;
+	float forceY;
+
 	float radius = 10;
 
 	ArrayList neighbors;
@@ -17,8 +20,6 @@ class Creature {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
-		velX = 0.002 - random(0.004);
-		velY = 0.002 - random(0.004);
 
 		neighbors = new ArrayList();
 	}
@@ -31,6 +32,8 @@ class Creature {
 	void update() {
 		neighbors = getNeighbors(FLOCK_CENTERING_RADIUS);
 		applyForces();
+		velX += forceX;
+		velY += forceY;
 		posX += velX;
 		posY += velY;
 
@@ -62,8 +65,14 @@ class Creature {
 	}
 
 	void applyForces() {
-		//apply the 3 forces to the creature and update its x and y velocities
+		forceX = 0;
+		forceY = 0;
 
+		//apply the 4 forces to the creature and update its x and y velocities
+		if (wanderingForce) {
+			forceX = 0.0002 - random(0.0004);
+			forceY = 0.0002 - random(0.0004);
+		}
 	}
 
 	ArrayList getNeighbors(float radius) {

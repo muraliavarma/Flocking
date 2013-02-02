@@ -76,6 +76,7 @@ public void draw() {
 }
 
 public void keyPressed() {
+	//simulation
 	if (key == 'q') {
 		noLoop();
 	}
@@ -85,6 +86,11 @@ public void keyPressed() {
 	}
 	else {
 		loop();
+	}
+
+	//forces
+	if (key == '4') {
+		wanderingForce = !wanderingForce;
 	}
 }
 Creature[] creatures;
@@ -98,6 +104,9 @@ class Creature {
 	float velX;
 	float velY;
 
+	float forceX;
+	float forceY;
+
 	float radius = 10;
 
 	ArrayList neighbors;
@@ -106,8 +115,6 @@ class Creature {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
-		velX = 0.002f - random(0.004f);
-		velY = 0.002f - random(0.004f);
 
 		neighbors = new ArrayList();
 	}
@@ -120,6 +127,8 @@ class Creature {
 	public void update() {
 		neighbors = getNeighbors(FLOCK_CENTERING_RADIUS);
 		applyForces();
+		velX += forceX;
+		velY += forceY;
 		posX += velX;
 		posY += velY;
 
@@ -151,8 +160,14 @@ class Creature {
 	}
 
 	public void applyForces() {
-		//apply the 3 forces to the creature and update its x and y velocities
+		forceX = 0;
+		forceY = 0;
 
+		//apply the 4 forces to the creature and update its x and y velocities
+		if (wanderingForce) {
+			forceX = 0.0002f - random(0.0004f);
+			forceY = 0.0002f - random(0.0004f);
+		}
 	}
 
 	public ArrayList getNeighbors(float radius) {
