@@ -21,7 +21,9 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
-final int NUM_CREATURES = 10;
+final int NUM_CREATURES = 100;
+
+final float EPSILON = 0.001f;
 
 int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
@@ -129,6 +131,11 @@ class Creature {
 		applyForces();
 		velX += forceX;
 		velY += forceY;
+
+		//clamp velocities
+		velX = max(-0.001f, min(velX, 0.001f));
+		velY = max(-0.001f, min(velY, 0.001f));
+
 		posX += velX;
 		posY += velY;
 
@@ -167,6 +174,24 @@ class Creature {
 		if (wanderingForce) {
 			forceX = 0.0002f - random(0.0004f);
 			forceY = 0.0002f - random(0.0004f);
+		}
+
+		if (flockCenteringForce) {
+			float weightSum = 0;
+			float fx = 0;
+			float fy = 0;
+			for (int i = 0; i < neighbors.size(); i++) {
+				Creature neighbor = creatures[PApplet.parseInt(neighbors.get(i).toString())];
+				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				weightSum += weight;
+				fx += weight * (neighbor.posX - posX);
+				fy += weight * (neighbor.posY - posY);
+			}
+			weightSum *= 100;
+			if (weightSum != 0) {
+				forceX += fx/weightSum;
+				forceY += fy/weightSum;
+			}
 		}
 	}
 
@@ -226,6 +251,12 @@ public ArrayList getNearestNeighbors(int idx, float radius) {
 		}
 	}
 	return ret;
+}
+
+public float distSq(int i, int j) {
+	Creature creatureI = creatures[i];
+	Creature creatureJ = creatures[j];
+	return (creatureI.posX - creatureJ.posX) * (creatureI.posX - creatureJ.posX) + (creatureI.posY - creatureJ.posY) * (creatureI.posY - creatureJ.posY);
 }
 
 //DEBUG stuff

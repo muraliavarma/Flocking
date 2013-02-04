@@ -34,6 +34,11 @@ class Creature {
 		applyForces();
 		velX += forceX;
 		velY += forceY;
+
+		//clamp velocities
+		velX = max(-0.001, min(velX, 0.001));
+		velY = max(-0.001, min(velY, 0.001));
+
 		posX += velX;
 		posY += velY;
 
@@ -72,6 +77,24 @@ class Creature {
 		if (wanderingForce) {
 			forceX = 0.0002 - random(0.0004);
 			forceY = 0.0002 - random(0.0004);
+		}
+
+		if (flockCenteringForce) {
+			float weightSum = 0;
+			float fx = 0;
+			float fy = 0;
+			for (int i = 0; i < neighbors.size(); i++) {
+				Creature neighbor = creatures[int(neighbors.get(i).toString())];
+				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				weightSum += weight;
+				fx += weight * (neighbor.posX - posX);
+				fy += weight * (neighbor.posY - posY);
+			}
+			weightSum *= 100;
+			if (weightSum != 0) {
+				forceX += fx/weightSum;
+				forceY += fy/weightSum;
+			}
 		}
 	}
 

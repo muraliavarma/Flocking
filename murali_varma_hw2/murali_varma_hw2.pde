@@ -6,7 +6,9 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
-final int NUM_CREATURES = 10;
+final int NUM_CREATURES = 100;
+
+final float EPSILON = 0.001;
 
 int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
