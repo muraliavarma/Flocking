@@ -1,14 +1,19 @@
 final float FLOCK_CENTERING_RADIUS = 0.2;
+final float COLLISION_AVOIDANCE_RADIUS = 0.1;
 
 HashMap flockCenterGrid;
+HashMap collisionAvoidanceGrid;
 
 void initNeighborGrids() {
 	flockCenterGrid = new HashMap();
+	collisionAvoidanceGrid = new HashMap();
 }
 
 void computeNeighborGrids() {
 	//use active forces and compute separate neighbor grids for each force
-	float radius = FLOCK_CENTERING_RADIUS;
+	float radius;
+
+	radius = FLOCK_CENTERING_RADIUS;
 	flockCenterGrid.clear();
 	for (int i = 0; i < NUM_CREATURES; i++) {
 		String key = int(creatures[i].posX/radius) + "," + int(creatures[i].posY/radius);
@@ -18,9 +23,20 @@ void computeNeighborGrids() {
 		}
 		((ArrayList)flockCenterGrid.get(key)).add(i);
 	}
+
+	radius = COLLISION_AVOIDANCE_RADIUS;
+	collisionAvoidanceGrid.clear();
+	for (int i = 0; i < NUM_CREATURES; i++) {
+		String key = int(creatures[i].posX/radius) + "," + int(creatures[i].posY/radius);
+		ArrayList val = (ArrayList)collisionAvoidanceGrid.get(key);
+		if (val == null) {
+			collisionAvoidanceGrid.put(key, new ArrayList());
+		}
+		((ArrayList)collisionAvoidanceGrid.get(key)).add(i);
+	}
 }
 
-ArrayList getNearestNeighbors(int idx, float radius) {
+ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 	ArrayList ret = new ArrayList();
 	int x = int(creatures[idx].posX/radius);
 	int y = int(creatures[idx].posY/radius);
@@ -31,7 +47,7 @@ ArrayList getNearestNeighbors(int idx, float radius) {
 			if (x + i < 0 || y + j < 0 || x + i > 1.0/radius || y + j > 1.0/radius) {
 				continue;
 			}
-			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get((x + i) + "," + (y + j));
+			ArrayList cellCreatures = (ArrayList)grid.get((x + i) + "," + (y + j));
 			if (cellCreatures == null) {
 				continue;
 			}
@@ -42,7 +58,7 @@ ArrayList getNearestNeighbors(int idx, float radius) {
 				}
 				float diffX = cellCreature.posX - creatures[idx].posX;
 				float diffY = cellCreature.posY - creatures[idx].posY;
-				if (diffX * diffX + diffY * diffY <= FLOCK_CENTERING_RADIUS * FLOCK_CENTERING_RADIUS) {
+				if (diffX * diffX + diffY * diffY <= radius * radius) {
 					ret.add(cellCreature.idx);
 				}
 			}

@@ -14,14 +14,16 @@ class Creature {
 
 	float radius = 10;
 
-	ArrayList neighbors;
+	ArrayList neighborsFC;
+	ArrayList neighborsCA;
 
 	Creature(int i) {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
 
-		neighbors = new ArrayList();
+		neighborsFC = new ArrayList();
+		neighborsCA = new ArrayList();
 	}
 
 	void draw() {
@@ -30,7 +32,8 @@ class Creature {
 	}
 
 	void update() {
-		neighbors = getNeighbors(FLOCK_CENTERING_RADIUS);
+		neighborsFC = getNeighbors(FLOCK_CENTERING_RADIUS, flockCenterGrid);
+		neighborsCA = getNeighbors(COLLISION_AVOIDANCE_RADIUS, collisionAvoidanceGrid);
 		applyForces();
 		velX += forceX;
 		velY += forceY;
@@ -83,8 +86,8 @@ class Creature {
 			float weightSum = 0;
 			float fx = 0;
 			float fy = 0;
-			for (int i = 0; i < neighbors.size(); i++) {
-				Creature neighbor = creatures[int(neighbors.get(i).toString())];
+			for (int i = 0; i < neighborsFC.size(); i++) {
+				Creature neighbor = creatures[int(neighborsFC.get(i).toString())];
 				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
 				weightSum += weight;
 				fx += weight * (neighbor.posX - posX);
@@ -96,9 +99,27 @@ class Creature {
 				forceY += fy/weightSum;
 			}
 		}
+
+		if (collisionAvoidanceForce) {
+			float weightSum = 0;
+			float fx = 0;
+			float fy = 0;
+			for (int i = 0; i < neighborsCA.size(); i++) {
+				Creature neighbor = creatures[int(neighborsCA.get(i).toString())];
+				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				weightSum += weight;
+				fx += weight * (posX - neighbor.posX);
+				fy += weight * (posY - neighbor.posY);
+			}
+			weightSum *= 100;
+			if (weightSum != 0) {
+				forceX += fx/weightSum;
+				forceY += fy/weightSum;
+			}
+		}
 	}
 
-	ArrayList getNeighbors(float radius) {
-		return getNearestNeighbors(idx, radius);
+	ArrayList getNeighbors(float radius, HashMap grid) {
+		return getNearestNeighbors(idx, radius, grid);
 	}
 };

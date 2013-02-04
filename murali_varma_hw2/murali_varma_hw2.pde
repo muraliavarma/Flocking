@@ -76,6 +76,15 @@ void keyPressed() {
 	}
 
 	//forces
+	if (key == '1') {
+		flockCenteringForce = !flockCenteringForce;
+	}
+	if (key == '2') {
+		velocityMatchingForce = !velocityMatchingForce;
+	}
+	if (key == '3') {
+		collisionAvoidanceForce = !collisionAvoidanceForce;
+	}
 	if (key == '4') {
 		wanderingForce = !wanderingForce;
 	}

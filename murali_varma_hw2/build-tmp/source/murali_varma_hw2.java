@@ -91,6 +91,15 @@ public void keyPressed() {
 	}
 
 	//forces
+	if (key == '1') {
+		flockCenteringForce = !flockCenteringForce;
+	}
+	if (key == '2') {
+		velocityMatchingForce = !velocityMatchingForce;
+	}
+	if (key == '3') {
+		collisionAvoidanceForce = !collisionAvoidanceForce;
+	}
 	if (key == '4') {
 		wanderingForce = !wanderingForce;
 	}
@@ -111,14 +120,16 @@ class Creature {
 
 	float radius = 10;
 
-	ArrayList neighbors;
+	ArrayList neighborsFC;
+	ArrayList neighborsCA;
 
 	Creature(int i) {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
 
-		neighbors = new ArrayList();
+		neighborsFC = new ArrayList();
+		neighborsCA = new ArrayList();
 	}
 
 	public void draw() {
@@ -127,7 +138,8 @@ class Creature {
 	}
 
 	public void update() {
-		neighbors = getNeighbors(FLOCK_CENTERING_RADIUS);
+		neighborsFC = getNeighbors(FLOCK_CENTERING_RADIUS, flockCenterGrid);
+		neighborsCA = getNeighbors(COLLISION_AVOIDANCE_RADIUS, collisionAvoidanceGrid);
 		applyForces();
 		velX += forceX;
 		velY += forceY;
@@ -180,8 +192,8 @@ class Creature {
 			float weightSum = 0;
 			float fx = 0;
 			float fy = 0;
-			for (int i = 0; i < neighbors.size(); i++) {
-				Creature neighbor = creatures[PApplet.parseInt(neighbors.get(i).toString())];
+			for (int i = 0; i < neighborsFC.size(); i++) {
+				Creature neighbor = creatures[PApplet.parseInt(neighborsFC.get(i).toString())];
 				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
 				weightSum += weight;
 				fx += weight * (neighbor.posX - posX);
@@ -193,24 +205,47 @@ class Creature {
 				forceY += fy/weightSum;
 			}
 		}
+
+		if (collisionAvoidanceForce) {
+			float weightSum = 0;
+			float fx = 0;
+			float fy = 0;
+			for (int i = 0; i < neighborsCA.size(); i++) {
+				Creature neighbor = creatures[PApplet.parseInt(neighborsCA.get(i).toString())];
+				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				weightSum += weight;
+				fx += weight * (posX - neighbor.posX);
+				fy += weight * (posY - neighbor.posY);
+			}
+			weightSum *= 100;
+			if (weightSum != 0) {
+				forceX += fx/weightSum;
+				forceY += fy/weightSum;
+			}
+		}
 	}
 
-	public ArrayList getNeighbors(float radius) {
-		return getNearestNeighbors(idx, radius);
+	public ArrayList getNeighbors(float radius, HashMap grid) {
+		return getNearestNeighbors(idx, radius, grid);
 	}
 };
 
 final float FLOCK_CENTERING_RADIUS = 0.2f;
+final float COLLISION_AVOIDANCE_RADIUS = 0.1f;
 
 HashMap flockCenterGrid;
+HashMap collisionAvoidanceGrid;
 
 public void initNeighborGrids() {
 	flockCenterGrid = new HashMap();
+	collisionAvoidanceGrid = new HashMap();
 }
 
 public void computeNeighborGrids() {
 	//use active forces and compute separate neighbor grids for each force
-	float radius = FLOCK_CENTERING_RADIUS;
+	float radius;
+
+	radius = FLOCK_CENTERING_RADIUS;
 	flockCenterGrid.clear();
 	for (int i = 0; i < NUM_CREATURES; i++) {
 		String key = PApplet.parseInt(creatures[i].posX/radius) + "," + PApplet.parseInt(creatures[i].posY/radius);
@@ -220,9 +255,20 @@ public void computeNeighborGrids() {
 		}
 		((ArrayList)flockCenterGrid.get(key)).add(i);
 	}
+
+	radius = COLLISION_AVOIDANCE_RADIUS;
+	collisionAvoidanceGrid.clear();
+	for (int i = 0; i < NUM_CREATURES; i++) {
+		String key = PApplet.parseInt(creatures[i].posX/radius) + "," + PApplet.parseInt(creatures[i].posY/radius);
+		ArrayList val = (ArrayList)collisionAvoidanceGrid.get(key);
+		if (val == null) {
+			collisionAvoidanceGrid.put(key, new ArrayList());
+		}
+		((ArrayList)collisionAvoidanceGrid.get(key)).add(i);
+	}
 }
 
-public ArrayList getNearestNeighbors(int idx, float radius) {
+public ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 	ArrayList ret = new ArrayList();
 	int x = PApplet.parseInt(creatures[idx].posX/radius);
 	int y = PApplet.parseInt(creatures[idx].posY/radius);
@@ -233,7 +279,7 @@ public ArrayList getNearestNeighbors(int idx, float radius) {
 			if (x + i < 0 || y + j < 0 || x + i > 1.0f/radius || y + j > 1.0f/radius) {
 				continue;
 			}
-			ArrayList cellCreatures = (ArrayList)flockCenterGrid.get((x + i) + "," + (y + j));
+			ArrayList cellCreatures = (ArrayList)grid.get((x + i) + "," + (y + j));
 			if (cellCreatures == null) {
 				continue;
 			}
@@ -244,7 +290,7 @@ public ArrayList getNearestNeighbors(int idx, float radius) {
 				}
 				float diffX = cellCreature.posX - creatures[idx].posX;
 				float diffY = cellCreature.posY - creatures[idx].posY;
-				if (diffX * diffX + diffY * diffY <= FLOCK_CENTERING_RADIUS * FLOCK_CENTERING_RADIUS) {
+				if (diffX * diffX + diffY * diffY <= radius * radius) {
 					ret.add(cellCreature.idx);
 				}
 			}
