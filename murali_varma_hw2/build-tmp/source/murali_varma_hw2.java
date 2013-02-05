@@ -29,9 +29,9 @@ final float FLOCK_CENTERING_RADIUS = 0.2f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.1f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
 
-final float FLOCKING_CENTERING_WEIGHT = 100;
-final float COLLISION_AVOIDANCE_WEIGHT = 100;
-final float VELOCITY_MATCHING_WEIGHT = 100;
+final float FLOCKING_CENTERING_WEIGHT = 0.01f;
+final float COLLISION_AVOIDANCE_WEIGHT = 0.02f;
+final float VELOCITY_MATCHING_WEIGHT = 0.02f;
 final float WANDERING_WEIGHT = 0.0002f;
 
 int edgeBehavior = REFLECT_MODE;
@@ -210,7 +210,7 @@ class Creature {
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
 			}
-			weightSum *= FLOCKING_CENTERING_WEIGHT;
+			weightSum /= FLOCKING_CENTERING_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -228,7 +228,7 @@ class Creature {
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
 			}
-			weightSum *= COLLISION_AVOIDANCE_WEIGHT;
+			weightSum /= COLLISION_AVOIDANCE_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -246,7 +246,7 @@ class Creature {
 				fx += weight * (neighbor.velX - velX);
 				fy += weight * (neighbor.velY - velY);
 			}
-			weightSum *= VELOCITY_MATCHING_WEIGHT;
+			weightSum /= VELOCITY_MATCHING_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;

@@ -14,9 +14,9 @@ final float FLOCK_CENTERING_RADIUS = 0.2;
 final float COLLISION_AVOIDANCE_RADIUS = 0.1;
 final float VELOCITY_MATCHING_RADIUS = 0.1;
 
-final float FLOCKING_CENTERING_WEIGHT = 100;
-final float COLLISION_AVOIDANCE_WEIGHT = 100;
-final float VELOCITY_MATCHING_WEIGHT = 100;
+final float FLOCKING_CENTERING_WEIGHT = 0.01;
+final float COLLISION_AVOIDANCE_WEIGHT = 0.02;
+final float VELOCITY_MATCHING_WEIGHT = 0.02;
 final float WANDERING_WEIGHT = 0.0002;
 
 int edgeBehavior = REFLECT_MODE;
@@ -24,8 +24,8 @@ int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = false;
-boolean velocityMatchingForce = false;
 boolean collisionAvoidanceForce = true;
+boolean velocityMatchingForce = false;
 boolean wanderingForce = false;
 
 void setup() {

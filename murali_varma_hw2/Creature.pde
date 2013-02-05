@@ -95,7 +95,7 @@ class Creature {
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
 			}
-			weightSum *= FLOCKING_CENTERING_WEIGHT;
+			weightSum /= FLOCKING_CENTERING_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -113,7 +113,7 @@ class Creature {
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
 			}
-			weightSum *= COLLISION_AVOIDANCE_WEIGHT;
+			weightSum /= COLLISION_AVOIDANCE_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -131,7 +131,7 @@ class Creature {
 				fx += weight * (neighbor.velX - velX);
 				fy += weight * (neighbor.velY - velY);
 			}
-			weightSum *= VELOCITY_MATCHING_WEIGHT;
+			weightSum /= VELOCITY_MATCHING_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
