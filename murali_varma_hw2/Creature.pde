@@ -16,6 +16,7 @@ class Creature {
 
 	ArrayList neighborsFC;
 	ArrayList neighborsCA;
+	ArrayList neighborsVM;
 
 	Creature(int i) {
 		idx = i;
@@ -34,6 +35,7 @@ class Creature {
 	void update() {
 		neighborsFC = getNeighbors(FLOCK_CENTERING_RADIUS, flockCenterGrid);
 		neighborsCA = getNeighbors(COLLISION_AVOIDANCE_RADIUS, collisionAvoidanceGrid);
+		neighborsVM = getNeighbors(VELOCITY_MATCHING_RADIUS, velocityMatchingGrid);
 		applyForces();
 		velX += forceX;
 		velY += forceY;
@@ -110,6 +112,24 @@ class Creature {
 				weightSum += weight;
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
+			}
+			weightSum *= 100;
+			if (weightSum != 0) {
+				forceX += fx/weightSum;
+				forceY += fy/weightSum;
+			}
+		}
+
+		if (velocityMatchingForce) {
+			float weightSum = 0;
+			float fx = 0;
+			float fy = 0;
+			for (int i = 0; i < neighborsVM.size(); i++) {
+				Creature neighbor = creatures[int(neighborsVM.get(i).toString())];
+				float weight = 1;
+				weightSum += weight;
+				fx += weight * (neighbor.velX - velX);
+				fy += weight * (neighbor.velY - velY);
 			}
 			weightSum *= 100;
 			if (weightSum != 0) {

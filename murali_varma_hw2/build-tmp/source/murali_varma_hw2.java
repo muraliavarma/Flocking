@@ -29,10 +29,10 @@ int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
-boolean flockCenteringForce = true;
-boolean velocityMatchingForce = true;
+boolean flockCenteringForce = false;
+boolean velocityMatchingForce = false;
 boolean collisionAvoidanceForce = true;
-boolean wanderingForce = true;
+boolean wanderingForce = false;
 
 public void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -122,6 +122,7 @@ class Creature {
 
 	ArrayList neighborsFC;
 	ArrayList neighborsCA;
+	ArrayList neighborsVM;
 
 	Creature(int i) {
 		idx = i;
@@ -140,6 +141,7 @@ class Creature {
 	public void update() {
 		neighborsFC = getNeighbors(FLOCK_CENTERING_RADIUS, flockCenterGrid);
 		neighborsCA = getNeighbors(COLLISION_AVOIDANCE_RADIUS, collisionAvoidanceGrid);
+		neighborsVM = getNeighbors(VELOCITY_MATCHING_RADIUS, velocityMatchingGrid);
 		applyForces();
 		velX += forceX;
 		velY += forceY;
@@ -223,6 +225,24 @@ class Creature {
 				forceY += fy/weightSum;
 			}
 		}
+
+		if (velocityMatchingForce) {
+			float weightSum = 0;
+			float fx = 0;
+			float fy = 0;
+			for (int i = 0; i < neighborsVM.size(); i++) {
+				Creature neighbor = creatures[PApplet.parseInt(neighborsVM.get(i).toString())];
+				float weight = 1;
+				weightSum += weight;
+				fx += weight * (neighbor.velX - velX);
+				fy += weight * (neighbor.velY - velY);
+			}
+			weightSum *= 10000;
+			if (weightSum != 0) {
+				forceX += fx/weightSum;
+				forceY += fy/weightSum;
+			}
+		}
 	}
 
 	public ArrayList getNeighbors(float radius, HashMap grid) {
@@ -232,13 +252,16 @@ class Creature {
 
 final float FLOCK_CENTERING_RADIUS = 0.2f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.1f;
+final float VELOCITY_MATCHING_RADIUS = 0.1f;
 
 HashMap flockCenterGrid;
 HashMap collisionAvoidanceGrid;
+HashMap velocityMatchingGrid;
 
 public void initNeighborGrids() {
 	flockCenterGrid = new HashMap();
 	collisionAvoidanceGrid = new HashMap();
+	velocityMatchingGrid = new HashMap();
 }
 
 public void computeNeighborGrids() {
@@ -265,6 +288,17 @@ public void computeNeighborGrids() {
 			collisionAvoidanceGrid.put(key, new ArrayList());
 		}
 		((ArrayList)collisionAvoidanceGrid.get(key)).add(i);
+	}
+
+	radius = VELOCITY_MATCHING_RADIUS;
+	velocityMatchingGrid.clear();
+	for (int i = 0; i < NUM_CREATURES; i++) {
+		String key = PApplet.parseInt(creatures[i].posX/radius) + "," + PApplet.parseInt(creatures[i].posY/radius);
+		ArrayList val = (ArrayList)velocityMatchingGrid.get(key);
+		if (val == null) {
+			velocityMatchingGrid.put(key, new ArrayList());
+		}
+		((ArrayList)velocityMatchingGrid.get(key)).add(i);
 	}
 }
 

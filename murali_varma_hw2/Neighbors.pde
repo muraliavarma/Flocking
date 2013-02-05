@@ -1,12 +1,15 @@
 final float FLOCK_CENTERING_RADIUS = 0.2;
 final float COLLISION_AVOIDANCE_RADIUS = 0.1;
+final float VELOCITY_MATCHING_RADIUS = 0.1;
 
 HashMap flockCenterGrid;
 HashMap collisionAvoidanceGrid;
+HashMap velocityMatchingGrid;
 
 void initNeighborGrids() {
 	flockCenterGrid = new HashMap();
 	collisionAvoidanceGrid = new HashMap();
+	velocityMatchingGrid = new HashMap();
 }
 
 void computeNeighborGrids() {
@@ -33,6 +36,17 @@ void computeNeighborGrids() {
 			collisionAvoidanceGrid.put(key, new ArrayList());
 		}
 		((ArrayList)collisionAvoidanceGrid.get(key)).add(i);
+	}
+
+	radius = VELOCITY_MATCHING_RADIUS;
+	velocityMatchingGrid.clear();
+	for (int i = 0; i < NUM_CREATURES; i++) {
+		String key = int(creatures[i].posX/radius) + "," + int(creatures[i].posY/radius);
+		ArrayList val = (ArrayList)velocityMatchingGrid.get(key);
+		if (val == null) {
+			velocityMatchingGrid.put(key, new ArrayList());
+		}
+		((ArrayList)velocityMatchingGrid.get(key)).add(i);
 	}
 }
 

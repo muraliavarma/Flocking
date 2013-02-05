@@ -14,10 +14,10 @@ int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
-boolean flockCenteringForce = true;
-boolean velocityMatchingForce = true;
+boolean flockCenteringForce = false;
+boolean velocityMatchingForce = false;
 boolean collisionAvoidanceForce = true;
-boolean wanderingForce = true;
+boolean wanderingForce = false;
 
 void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
