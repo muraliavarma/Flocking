@@ -1,7 +1,3 @@
-final float FLOCK_CENTERING_RADIUS = 0.2;
-final float COLLISION_AVOIDANCE_RADIUS = 0.1;
-final float VELOCITY_MATCHING_RADIUS = 0.1;
-
 HashMap flockCenterGrid;
 HashMap collisionAvoidanceGrid;
 HashMap velocityMatchingGrid;

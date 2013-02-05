@@ -25,6 +25,15 @@ final int NUM_CREATURES = 100;
 
 final float EPSILON = 0.001f;
 
+final float FLOCK_CENTERING_RADIUS = 0.2f;
+final float COLLISION_AVOIDANCE_RADIUS = 0.1f;
+final float VELOCITY_MATCHING_RADIUS = 0.1f;
+
+final float FLOCKING_CENTERING_WEIGHT = 100;
+final float COLLISION_AVOIDANCE_WEIGHT = 100;
+final float VELOCITY_MATCHING_WEIGHT = 100;
+final float WANDERING_WEIGHT = 0.0002f;
+
 int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
@@ -186,8 +195,8 @@ class Creature {
 
 		//apply the 4 forces to the creature and update its x and y velocities
 		if (wanderingForce) {
-			forceX = 0.0002f - random(0.0004f);
-			forceY = 0.0002f - random(0.0004f);
+			forceX = WANDERING_WEIGHT * (1 - random(2));
+			forceY = WANDERING_WEIGHT * (1 - random(2));
 		}
 
 		if (flockCenteringForce) {
@@ -201,7 +210,7 @@ class Creature {
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
 			}
-			weightSum *= 100;
+			weightSum *= FLOCKING_CENTERING_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -219,7 +228,7 @@ class Creature {
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
 			}
-			weightSum *= 100;
+			weightSum *= COLLISION_AVOIDANCE_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -237,7 +246,7 @@ class Creature {
 				fx += weight * (neighbor.velX - velX);
 				fy += weight * (neighbor.velY - velY);
 			}
-			weightSum *= 10000;
+			weightSum *= VELOCITY_MATCHING_WEIGHT;
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
@@ -249,10 +258,6 @@ class Creature {
 		return getNearestNeighbors(idx, radius, grid);
 	}
 };
-
-final float FLOCK_CENTERING_RADIUS = 0.2f;
-final float COLLISION_AVOIDANCE_RADIUS = 0.1f;
-final float VELOCITY_MATCHING_RADIUS = 0.1f;
 
 HashMap flockCenterGrid;
 HashMap collisionAvoidanceGrid;
