@@ -20,7 +20,7 @@ final float VELOCITY_MATCHING_WEIGHT = 0.1;
 final float WANDERING_WEIGHT = 0.0002;
 
 int edgeBehavior = TOROIDAL_MODE;
-int backgroundAlpha = 20;	//0 for full trail, 255 for no trail
+int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;
@@ -88,6 +88,17 @@ void keyPressed() {
 	if (key == 's') {
 		for (int i = 0; i < NUM_CREATURES; i++) {
 			creatures[i].init();
+		}
+	}
+
+	if (key == 'p') {
+		if (backgroundAlpha == 255) {
+			//if no trail, make it full trail
+			backgroundAlpha = 0;
+		}
+		else {
+			//if some trail (between 1 and 254), make it no trail
+			backgroundAlpha = 255;
 		}
 	}
 
