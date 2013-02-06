@@ -19,6 +19,8 @@ final float COLLISION_AVOIDANCE_WEIGHT = 0.001;
 final float VELOCITY_MATCHING_WEIGHT = 0.1;
 final float WANDERING_WEIGHT = 0.0002;
 
+boolean isLoop = true;
+
 int edgeBehavior = TOROIDAL_MODE;
 int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
@@ -80,15 +82,18 @@ void clearBackground() {
 
 void keyPressed() {
 	//simulation
-	if (key == 'q') {
-		noLoop();
+	if (key == ' ') {
+		isLoop = !isLoop;
 	}
-	else if(key == 'w') {
+
+	if (isLoop) {
+		loop();
+	}
+	
+	if(key == '.' || !isLoop) {
 		noLoop();
 		redraw();
-	}
-	else {
-		loop();
+		isLoop = false;
 	}
 
 	//commands
