@@ -85,13 +85,13 @@ void keyPressed() {
 	}
 
 	//commands
-	if (key == 's') {
+	if (key == 's' || key == 'S') {
 		for (int i = 0; i < NUM_CREATURES; i++) {
 			creatures[i].init();
 		}
 	}
 
-	if (key == 'p') {
+	if (key == 'p' || key == 'P') {
 		if (backgroundAlpha == 255) {
 			//if no trail, make it full trail
 			backgroundAlpha = 0;
@@ -100,6 +100,13 @@ void keyPressed() {
 			//if some trail (between 1 and 254), make it no trail
 			backgroundAlpha = 255;
 		}
+	}
+
+	if (key == 'c' || key == 'C') {
+		int temp = backgroundAlpha;
+		backgroundAlpha = 255;
+		draw();
+		backgroundAlpha = temp;
 	}
 
 	//forces
