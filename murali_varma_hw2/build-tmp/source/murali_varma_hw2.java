@@ -21,7 +21,8 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
-final int NUM_CREATURES = 100;
+final int MIN_CREATURES = 1;
+final int MAX_CREATURES = 100;
 
 final float EPSILON = 0.01f;
 
@@ -34,8 +35,9 @@ final float COLLISION_AVOIDANCE_WEIGHT = 0.001f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0002f;
 
-boolean isLoop = true;
+int NUM_CREATURES = 10;
 
+boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
 int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
@@ -62,8 +64,8 @@ public void drawBackground() {
 }
 
 public void initCreatures() {
-	creatures = new Creature[NUM_CREATURES];
-	for (int i = 0; i < NUM_CREATURES; i++) {
+	creatures = new Creature[MAX_CREATURES];
+	for (int i = 0; i < MAX_CREATURES; i++) {
 		creatures[i] = new Creature(i);
 	}
 }
@@ -132,6 +134,16 @@ public void keyPressed() {
 
 	if (key == 'c' || key == 'C') {
 		clearBackground();
+	}
+
+	if (key == '=' || key == '+') {
+		NUM_CREATURES = min(NUM_CREATURES+1, MAX_CREATURES);
+		//reinit this newly added creature
+		creatures[NUM_CREATURES-1].init();
+	}
+
+	if (key == '-' || key == '-') {
+		NUM_CREATURES = max(NUM_CREATURES-1, MIN_CREATURES);
 	}
 
 	//forces
