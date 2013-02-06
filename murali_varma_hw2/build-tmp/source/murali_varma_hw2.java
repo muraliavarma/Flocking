@@ -99,6 +99,13 @@ public void keyPressed() {
 		loop();
 	}
 
+	//commands
+	if (key == 's') {
+		for (int i = 0; i < NUM_CREATURES; i++) {
+			creatures[i].init();
+		}
+	}
+
 	//forces
 	if (key == '1') {
 		flockCenteringForce = !flockCenteringForce;
@@ -135,13 +142,17 @@ class Creature {
 
 	Creature(int i) {
 		idx = i;
+		init();
+	}
+
+	public void init() {
 		posX = random(1);
 		posY = random(1);
 		velX = WANDERING_WEIGHT * (1 - random(2));
 		velY = WANDERING_WEIGHT * (1 - random(2));
 
 		neighborsFC = new ArrayList();
-		neighborsCA = new ArrayList();
+		neighborsCA = new ArrayList();		
 	}
 
 	public void draw() {

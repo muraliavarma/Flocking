@@ -84,6 +84,13 @@ void keyPressed() {
 		loop();
 	}
 
+	//commands
+	if (key == 's') {
+		for (int i = 0; i < NUM_CREATURES; i++) {
+			creatures[i].init();
+		}
+	}
+
 	//forces
 	if (key == '1') {
 		flockCenteringForce = !flockCenteringForce;

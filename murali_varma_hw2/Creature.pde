@@ -20,13 +20,17 @@ class Creature {
 
 	Creature(int i) {
 		idx = i;
+		init();
+	}
+
+	void init() {
 		posX = random(1);
 		posY = random(1);
 		velX = WANDERING_WEIGHT * (1 - random(2));
 		velY = WANDERING_WEIGHT * (1 - random(2));
 
 		neighborsFC = new ArrayList();
-		neighborsCA = new ArrayList();
+		neighborsCA = new ArrayList();		
 	}
 
 	void draw() {
