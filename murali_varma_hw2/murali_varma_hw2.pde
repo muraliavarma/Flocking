@@ -71,6 +71,13 @@ void draw() {
 	drawCreatures();
 }
 
+void clearBackground() {
+	int temp = backgroundAlpha;
+	backgroundAlpha = 255;
+	draw();
+	backgroundAlpha = temp;
+}
+
 void keyPressed() {
 	//simulation
 	if (key == 'q') {
@@ -86,6 +93,7 @@ void keyPressed() {
 
 	//commands
 	if (key == 's' || key == 'S') {
+		clearBackground();
 		for (int i = 0; i < NUM_CREATURES; i++) {
 			creatures[i].init();
 		}
@@ -103,10 +111,7 @@ void keyPressed() {
 	}
 
 	if (key == 'c' || key == 'C') {
-		int temp = backgroundAlpha;
-		backgroundAlpha = 255;
-		draw();
-		backgroundAlpha = temp;
+		clearBackground();
 	}
 
 	//forces
