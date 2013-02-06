@@ -19,8 +19,8 @@ final float COLLISION_AVOIDANCE_WEIGHT = 0.001;
 final float VELOCITY_MATCHING_WEIGHT = 0.1;
 final float WANDERING_WEIGHT = 0.0002;
 
-int edgeBehavior = REFLECT_MODE;
-int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
+int edgeBehavior = TOROIDAL_MODE;
+int backgroundAlpha = 20;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;

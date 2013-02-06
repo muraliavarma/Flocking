@@ -76,6 +76,20 @@ class Creature {
 		}
 	}
 
+	float distSqTo(int j) {
+		Creature other = creatures[j];
+		float diffX = abs(posX - other.posX);
+		if (edgeBehavior == TOROIDAL_MODE) {
+			diffX = min(diffX, 1 - diffX);
+		}
+		float diffY = abs(posY - other.posY);
+		if (edgeBehavior == TOROIDAL_MODE) {
+			diffY = min(diffY, 1 - diffY);
+		}
+
+		return diffX * diffX + diffY * diffY;
+	}
+
 	void applyForces() {
 		forceX = 0;
 		forceY = 0;
@@ -92,7 +106,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsFC.size(); i++) {
 				Creature neighbor = creatures[int(neighborsFC.get(i).toString())];
-				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
 				weightSum += weight;
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
@@ -110,7 +124,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsCA.size(); i++) {
 				Creature neighbor = creatures[int(neighborsCA.get(i).toString())];
-				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
 				weightSum += weight;
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);

@@ -34,8 +34,8 @@ final float COLLISION_AVOIDANCE_WEIGHT = 0.001f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0002f;
 
-int edgeBehavior = REFLECT_MODE;
-int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
+int edgeBehavior = TOROIDAL_MODE;
+int backgroundAlpha = 20;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;
@@ -191,6 +191,20 @@ class Creature {
 		}
 	}
 
+	public float distSqTo(int j) {
+		Creature other = creatures[j];
+		float diffX = abs(posX - other.posX);
+		if (edgeBehavior == TOROIDAL_MODE) {
+			diffX = min(diffX, 1 - diffX);
+		}
+		float diffY = abs(posY - other.posY);
+		if (edgeBehavior == TOROIDAL_MODE) {
+			diffY = min(diffY, 1 - diffY);
+		}
+
+		return diffX * diffX + diffY * diffY;
+	}
+
 	public void applyForces() {
 		forceX = 0;
 		forceY = 0;
@@ -207,7 +221,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsFC.size(); i++) {
 				Creature neighbor = creatures[PApplet.parseInt(neighborsFC.get(i).toString())];
-				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
 				weightSum += weight;
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
@@ -225,7 +239,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsCA.size(); i++) {
 				Creature neighbor = creatures[PApplet.parseInt(neighborsCA.get(i).toString())];
-				float weight = 1/(distSq(idx, neighbor.idx) + EPSILON);
+				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
 				weightSum += weight;
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
@@ -329,9 +343,9 @@ public ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 				if (cellCreature.idx == idx) {
 					continue;
 				}
-				float diffX = cellCreature.posX - creatures[idx].posX;
-				float diffY = cellCreature.posY - creatures[idx].posY;
-				if (diffX * diffX + diffY * diffY <= radius * radius) {
+				// float diffX = cellCreature.posX - creatures[idx].posX;
+				// float diffY = cellCreature.posY - creatures[idx].posY;
+				if (cellCreature.distSqTo(idx) <= radius * radius) {
 					ret.add(cellCreature.idx);
 				}
 			}
@@ -340,11 +354,15 @@ public ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 	return ret;
 }
 
-public float distSq(int i, int j) {
-	Creature creatureI = creatures[i];
-	Creature creatureJ = creatures[j];
-	return (creatureI.posX - creatureJ.posX) * (creatureI.posX - creatureJ.posX) + (creatureI.posY - creatureJ.posY) * (creatureI.posY - creatureJ.posY);
-}
+// float distSq(int i, int j) {
+// 	Creature creatureI = creatures[i];
+// 	Creature creatureJ = creatures[j];
+// 	float diffX = creatureI.posX - creatureJ.posX;
+// 	if (edgeBehavior == TOROIDAL_MODE) {
+// 		diffX = min(diffX, )
+// 	}
+// 	return (creatureI.posX - creatureJ.posX) * (creatureI.posX - creatureJ.posX) + (creatureI.posY - creatureJ.posY) * (creatureI.posY - creatureJ.posY);
+// }
 
 //DEBUG stuff
 
