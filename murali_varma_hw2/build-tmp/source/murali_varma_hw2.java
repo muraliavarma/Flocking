@@ -21,6 +21,9 @@ final int CONTROLS_WIDTH = 100;
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
 
+final int ATTRACT_MODE = 0;
+final int REPEL_MODE = 1;
+
 final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
@@ -29,16 +32,19 @@ final float EPSILON = 0.01f;
 final float FLOCK_CENTERING_RADIUS = 0.1f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
+final float MOUSE_RADIUS = 0.1f;
 
 final float FLOCKING_CENTERING_WEIGHT = 0.0001f;
 final float COLLISION_AVOIDANCE_WEIGHT = 0.001f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0002f;
+final float MOUSE_WEIGHT = 0.00001f;
 
-int NUM_CREATURES = 10;
+int NUM_CREATURES = 100;
 
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
+int mouseMode = ATTRACT_MODE;
 int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
@@ -180,16 +186,20 @@ class Creature {
 
 	public float distSqTo(int j) {
 		Creature other = creatures[j];
-		float diffX = abs(posX - other.posX);
+		return distSqTo(other.posX, other.posY);
+	}
+
+	public float distSqTo(float x, float y) {
+		float diffX = abs(posX - x);
 		if (edgeBehavior == TOROIDAL_MODE) {
 			diffX = min(diffX, 1 - diffX);
 		}
-		float diffY = abs(posY - other.posY);
+		float diffY = abs(posY - y);
 		if (edgeBehavior == TOROIDAL_MODE) {
 			diffY = min(diffY, 1 - diffY);
 		}
 
-		return diffX * diffX + diffY * diffY;
+		return diffX * diffX + diffY * diffY;		
 	}
 
 	public void applyForces() {
@@ -255,6 +265,18 @@ class Creature {
 				forceY += fy/weightSum;
 			}
 		}
+
+		if (mousePressed) {
+			float x = (1.0f * mouseX)/SCREEN_WIDTH;
+			float y = (1.0f * mouseY)/SCREEN_HEIGHT;
+			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
+			float dist = distSqTo(x, y);
+			if (dist < MOUSE_RADIUS) {
+				float weight = 1/(dist + EPSILON);
+				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
+				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
+			}
+		}
 	}
 
 	public ArrayList getNeighbors(float radius, HashMap grid) {
@@ -306,9 +328,15 @@ public void keyPressed() {
 		//reinit this newly added creature
 		creatures[NUM_CREATURES-1].init();
 	}
-
-	if (key == '-' || key == '-') {
+	if (key == '-' || key == '_') {
 		NUM_CREATURES = max(NUM_CREATURES-1, MIN_CREATURES);
+	}
+
+	if (key == 'a' || key == 'A') {
+		mouseMode = ATTRACT_MODE;
+	}
+	if (key == 'r' || key == 'R') {
+		mouseMode = REPEL_MODE;
 	}
 
 	//forces
@@ -324,10 +352,6 @@ public void keyPressed() {
 	if (key == '4') {
 		wanderingForce = !wanderingForce;
 	}
-}
-
-public void mousePressed() {
-	
 }
 HashMap flockCenterGrid;
 HashMap collisionAvoidanceGrid;

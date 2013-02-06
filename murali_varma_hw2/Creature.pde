@@ -82,16 +82,20 @@ class Creature {
 
 	float distSqTo(int j) {
 		Creature other = creatures[j];
-		float diffX = abs(posX - other.posX);
+		return distSqTo(other.posX, other.posY);
+	}
+
+	float distSqTo(float x, float y) {
+		float diffX = abs(posX - x);
 		if (edgeBehavior == TOROIDAL_MODE) {
 			diffX = min(diffX, 1 - diffX);
 		}
-		float diffY = abs(posY - other.posY);
+		float diffY = abs(posY - y);
 		if (edgeBehavior == TOROIDAL_MODE) {
 			diffY = min(diffY, 1 - diffY);
 		}
 
-		return diffX * diffX + diffY * diffY;
+		return diffX * diffX + diffY * diffY;		
 	}
 
 	void applyForces() {
@@ -155,6 +159,18 @@ class Creature {
 			if (weightSum != 0) {
 				forceX += fx/weightSum;
 				forceY += fy/weightSum;
+			}
+		}
+
+		if (mousePressed) {
+			float x = (1.0 * mouseX)/SCREEN_WIDTH;
+			float y = (1.0 * mouseY)/SCREEN_HEIGHT;
+			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
+			float dist = distSqTo(x, y);
+			if (dist < MOUSE_RADIUS) {
+				float weight = 1/(dist + EPSILON);
+				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
+				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}
 		}
 	}

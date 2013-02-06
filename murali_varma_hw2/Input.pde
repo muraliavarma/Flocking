@@ -42,9 +42,15 @@ void keyPressed() {
 		//reinit this newly added creature
 		creatures[NUM_CREATURES-1].init();
 	}
-
-	if (key == '-' || key == '-') {
+	if (key == '-' || key == '_') {
 		NUM_CREATURES = max(NUM_CREATURES-1, MIN_CREATURES);
+	}
+
+	if (key == 'a' || key == 'A') {
+		mouseMode = ATTRACT_MODE;
+	}
+	if (key == 'r' || key == 'R') {
+		mouseMode = REPEL_MODE;
 	}
 
 	//forces
@@ -60,8 +66,4 @@ void keyPressed() {
 	if (key == '4') {
 		wanderingForce = !wanderingForce;
 	}
-}
-
-void mousePressed() {
-	
 }
