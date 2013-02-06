@@ -8,25 +8,25 @@ final int TOROIDAL_MODE = 1;
 
 final int NUM_CREATURES = 100;
 
-final float EPSILON = 0.001;
+final float EPSILON = 0.01;
 
-final float FLOCK_CENTERING_RADIUS = 0.2;
-final float COLLISION_AVOIDANCE_RADIUS = 0.1;
+final float FLOCK_CENTERING_RADIUS = 0.1;
+final float COLLISION_AVOIDANCE_RADIUS = 0.05;
 final float VELOCITY_MATCHING_RADIUS = 0.1;
 
-final float FLOCKING_CENTERING_WEIGHT = 0.01;
-final float COLLISION_AVOIDANCE_WEIGHT = 0.02;
-final float VELOCITY_MATCHING_WEIGHT = 0.02;
+final float FLOCKING_CENTERING_WEIGHT = 0.0001;
+final float COLLISION_AVOIDANCE_WEIGHT = 0.001;
+final float VELOCITY_MATCHING_WEIGHT = 0.1;
 final float WANDERING_WEIGHT = 0.0002;
 
 int edgeBehavior = REFLECT_MODE;
 int backgroundAlpha = 100;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
-boolean flockCenteringForce = false;
+boolean flockCenteringForce = true;
+boolean velocityMatchingForce = true;
 boolean collisionAvoidanceForce = true;
-boolean velocityMatchingForce = false;
-boolean wanderingForce = false;
+boolean wanderingForce = true;
 
 void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);

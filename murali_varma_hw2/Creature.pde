@@ -22,6 +22,8 @@ class Creature {
 		idx = i;
 		posX = random(1);
 		posY = random(1);
+		velX = WANDERING_WEIGHT * (1 - random(2));
+		velY = WANDERING_WEIGHT * (1 - random(2));
 
 		neighborsFC = new ArrayList();
 		neighborsCA = new ArrayList();
@@ -41,8 +43,8 @@ class Creature {
 		velY += forceY;
 
 		//clamp velocities
-		velX = max(-0.001, min(velX, 0.001));
-		velY = max(-0.001, min(velY, 0.001));
+		velX = max(-0.01, min(velX, 0.01));
+		velY = max(-0.01, min(velY, 0.01));
 
 		posX += velX;
 		posY += velY;
