@@ -12,7 +12,7 @@ final int REPEL_MODE = 1;
 final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
-final float EPSILON = 0.0001;
+final float EPSILON = 0.00001;
 
 final float FLOCK_CENTERING_RADIUS = 0.2;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05;

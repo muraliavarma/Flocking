@@ -27,7 +27,7 @@ final int REPEL_MODE = 1;
 final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
-final float EPSILON = 0.0001f;
+final float EPSILON = 0.00001f;
 
 final float FLOCK_CENTERING_RADIUS = 0.2f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
@@ -43,7 +43,7 @@ final float MOUSE_WEIGHT = 0.00003f;
 final float MIN_VELOCITY = -0.005f;
 final float MAX_VELOCITY = 0.005f;
 
-int NUM_CREATURES = 100;
+int NUM_CREATURES = 10;
 
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
