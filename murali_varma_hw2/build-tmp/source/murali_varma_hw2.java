@@ -29,13 +29,13 @@ final int MAX_CREATURES = 100;
 
 final float EPSILON = 0.00001f;
 
-final float FLOCK_CENTERING_RADIUS = 0.2f;
+final float FLOCK_CENTERING_RADIUS = 0.3f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
 final float MOUSE_RADIUS = 0.2f;
 
 final float FLOCKING_CENTERING_WEIGHT = 0.0001f;
-final float COLLISION_AVOIDANCE_WEIGHT = 0.002f;
+final float COLLISION_AVOIDANCE_WEIGHT = 0.003f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0002f;
 final float MOUSE_WEIGHT = 0.00003f;
@@ -434,16 +434,6 @@ public ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 	}
 	return ret;
 }
-
-// float distSq(int i, int j) {
-// 	Creature creatureI = creatures[i];
-// 	Creature creatureJ = creatures[j];
-// 	float diffX = creatureI.posX - creatureJ.posX;
-// 	if (edgeBehavior == TOROIDAL_MODE) {
-// 		diffX = min(diffX, )
-// 	}
-// 	return (creatureI.posX - creatureJ.posX) * (creatureI.posX - creatureJ.posX) + (creatureI.posY - creatureJ.posY) * (creatureI.posY - creatureJ.posY);
-// }
 
 //DEBUG stuff
 

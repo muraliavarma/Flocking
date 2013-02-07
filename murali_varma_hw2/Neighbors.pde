@@ -77,16 +77,6 @@ ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 	return ret;
 }
 
-// float distSq(int i, int j) {
-// 	Creature creatureI = creatures[i];
-// 	Creature creatureJ = creatures[j];
-// 	float diffX = creatureI.posX - creatureJ.posX;
-// 	if (edgeBehavior == TOROIDAL_MODE) {
-// 		diffX = min(diffX, )
-// 	}
-// 	return (creatureI.posX - creatureJ.posX) * (creatureI.posX - creatureJ.posX) + (creatureI.posY - creatureJ.posY) * (creatureI.posY - creatureJ.posY);
-// }
-
 //DEBUG stuff
 
 void printGrid(int radius) {

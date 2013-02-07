@@ -14,13 +14,13 @@ final int MAX_CREATURES = 100;
 
 final float EPSILON = 0.00001;
 
-final float FLOCK_CENTERING_RADIUS = 0.2;
+final float FLOCK_CENTERING_RADIUS = 0.3;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05;
 final float VELOCITY_MATCHING_RADIUS = 0.1;
 final float MOUSE_RADIUS = 0.2;
 
 final float FLOCKING_CENTERING_WEIGHT = 0.0001;
-final float COLLISION_AVOIDANCE_WEIGHT = 0.002;
+final float COLLISION_AVOIDANCE_WEIGHT = 0.003;
 final float VELOCITY_MATCHING_WEIGHT = 0.1;
 final float WANDERING_WEIGHT = 0.0002;
 final float MOUSE_WEIGHT = 0.00003;
@@ -28,7 +28,7 @@ final float MOUSE_WEIGHT = 0.00003;
 final float MIN_VELOCITY = -0.005;
 final float MAX_VELOCITY = 0.005;
 
-int NUM_CREATURES = 100;
+int NUM_CREATURES = 10;
 
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
