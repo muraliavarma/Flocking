@@ -47,8 +47,8 @@ class Creature {
 		velY += forceY;
 
 		//clamp velocities
-		velX = max(-0.01, min(velX, 0.01));
-		velY = max(-0.01, min(velY, 0.01));
+		velX = max(MIN_VELOCITY, min(velX, MAX_VELOCITY));
+		velY = max(MIN_VELOCITY, min(velY, MAX_VELOCITY));
 
 		posX += velX;
 		posY += velY;
@@ -167,7 +167,7 @@ class Creature {
 			float y = (1.0 * mouseY)/SCREEN_HEIGHT;
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
 			float dist = distSqTo(x, y);
-			if (dist < MOUSE_RADIUS) {
+			if (dist < MOUSE_RADIUS * MOUSE_RADIUS) {
 				float weight = 1/(dist + EPSILON);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;

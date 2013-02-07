@@ -27,18 +27,21 @@ final int REPEL_MODE = 1;
 final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
-final float EPSILON = 0.01f;
+final float EPSILON = 0.0001f;
 
-final float FLOCK_CENTERING_RADIUS = 0.1f;
+final float FLOCK_CENTERING_RADIUS = 0.2f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
-final float MOUSE_RADIUS = 0.1f;
+final float MOUSE_RADIUS = 0.2f;
 
 final float FLOCKING_CENTERING_WEIGHT = 0.0001f;
-final float COLLISION_AVOIDANCE_WEIGHT = 0.001f;
+final float COLLISION_AVOIDANCE_WEIGHT = 0.002f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0002f;
-final float MOUSE_WEIGHT = 0.00001f;
+final float MOUSE_WEIGHT = 0.00003f;
+
+final float MIN_VELOCITY = -0.005f;
+final float MAX_VELOCITY = 0.005f;
 
 int NUM_CREATURES = 100;
 
@@ -151,8 +154,8 @@ class Creature {
 		velY += forceY;
 
 		//clamp velocities
-		velX = max(-0.01f, min(velX, 0.01f));
-		velY = max(-0.01f, min(velY, 0.01f));
+		velX = max(MIN_VELOCITY, min(velX, MAX_VELOCITY));
+		velY = max(MIN_VELOCITY, min(velY, MAX_VELOCITY));
 
 		posX += velX;
 		posY += velY;
@@ -271,7 +274,7 @@ class Creature {
 			float y = (1.0f * mouseY)/SCREEN_HEIGHT;
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
 			float dist = distSqTo(x, y);
-			if (dist < MOUSE_RADIUS) {
+			if (dist < MOUSE_RADIUS * MOUSE_RADIUS) {
 				float weight = 1/(dist + EPSILON);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
