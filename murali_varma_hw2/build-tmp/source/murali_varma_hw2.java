@@ -34,7 +34,7 @@ final float MOUSE_EPSILON = 0.001f;
 final float FLOCK_CENTERING_RADIUS = 0.3f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
-final float MOUSE_RADIUS = 0.2f;
+final float MOUSE_RADIUS = 0.3f;
 
 final float FLOCKING_CENTERING_WEIGHT = 0.00015f;
 float COLLISION_AVOIDANCE_WEIGHT = 0.0035f;
@@ -291,7 +291,7 @@ class Creature {
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
 			float distSq = distSqTo(x, y);
 			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = 1/(sqrt(distSq) + MOUSE_EPSILON);
+				float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}

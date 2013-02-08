@@ -112,6 +112,7 @@ class Creature {
 		//apply the 4 forces to the creature and update its x and y velocities
 
 		if (mousePressed) {
+			//so that particles do not cluster too much during mouse press attraction
 			COLLISION_AVOIDANCE_WEIGHT = 0.01;
 		}
 		else {
@@ -182,7 +183,7 @@ class Creature {
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
 			float distSq = distSqTo(x, y);
 			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = 1/(sqrt(distSq) + MOUSE_EPSILON);
+				float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}
