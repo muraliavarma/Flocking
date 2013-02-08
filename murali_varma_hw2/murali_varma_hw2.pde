@@ -1,7 +1,7 @@
 //constants
 final int SCREEN_WIDTH = 800;
 final int SCREEN_HEIGHT = 800;
-final int CONTROLS_WIDTH = 100;
+final int CONTROLS_WIDTH = 200;
 
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
@@ -30,6 +30,7 @@ final float MOUSE_WEIGHT = 0.0001;
 final float MIN_VELOCITY = -0.001;
 final float MAX_VELOCITY = 0.001;
 
+//variables
 int NUM_CREATURES = 100;
 
 boolean isLoop = true;
@@ -84,6 +85,7 @@ void draw() {
 	computeNeighborGrids();
 	updateCreatures();
 	drawCreatures();
+	drawGUI();
 }
 
 void clearBackground() {

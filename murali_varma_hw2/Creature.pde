@@ -180,12 +180,14 @@ class Creature {
 		if (mousePressed) {
 			float x = (1.0 * mouseX)/SCREEN_WIDTH;
 			float y = (1.0 * mouseY)/SCREEN_HEIGHT;
-			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
-			float distSq = distSqTo(x, y);
-			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
-				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
-				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
+			if (x <= 1 && y <= 1) {
+				int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
+				float distSq = distSqTo(x, y);
+				if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
+					float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
+					forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
+					forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
+				}
 			}
 		}
 	}

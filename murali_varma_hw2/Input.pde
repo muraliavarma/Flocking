@@ -23,13 +23,17 @@ void keyPressed() {
 	}
 
 	if (key == 'p' || key == 'P') {
-		if (backgroundAlpha == 255) {
+		if (backgroundAlpha == 10) {
+			//if half trail, make it no trail
+			backgroundAlpha = 255;
+		}
+		else if (backgroundAlpha == 255) {
 			//if no trail, make it full trail
 			backgroundAlpha = 0;
 		}
 		else {
-			//if some trail (between 1 and 254), make it no trail
-			backgroundAlpha = 255;
+			//if full trail (between 1 and 254), make it half trail
+			backgroundAlpha = 10;
 		}
 	}
 
@@ -68,9 +72,13 @@ void keyPressed() {
 	}
 
 	if (key >= '1' && key <= '4') {
-		println("Centering: " + (flockCenteringForce?"on":"off") +
+		println("Flock Centering: " + (flockCenteringForce?"on":"off") +
 			", Velocity matching: " + (velocityMatchingForce?"on":"off") +
 			", Collisions: " + (collisionAvoidanceForce?"on":"off") +
 			", Wandering: " + (wanderingForce?"on":"off"));
 	}
+}
+
+void mousePressed() {
+	
 }

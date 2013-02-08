@@ -16,7 +16,7 @@ public class murali_varma_hw2 extends PApplet {
 //constants
 final int SCREEN_WIDTH = 800;
 final int SCREEN_HEIGHT = 800;
-final int CONTROLS_WIDTH = 100;
+final int CONTROLS_WIDTH = 200;
 
 final int REFLECT_MODE = 0;
 final int TOROIDAL_MODE = 1;
@@ -45,6 +45,7 @@ final float MOUSE_WEIGHT = 0.0001f;
 final float MIN_VELOCITY = -0.001f;
 final float MAX_VELOCITY = 0.001f;
 
+//variables
 int NUM_CREATURES = 100;
 
 boolean isLoop = true;
@@ -99,6 +100,7 @@ public void draw() {
 	computeNeighborGrids();
 	updateCreatures();
 	drawCreatures();
+	drawGUI();
 }
 
 public void clearBackground() {
@@ -221,6 +223,7 @@ class Creature {
 		//apply the 4 forces to the creature and update its x and y velocities
 
 		if (mousePressed) {
+			//so that particles do not cluster too much during mouse press attraction
 			COLLISION_AVOIDANCE_WEIGHT = 0.01f;
 		}
 		else {
@@ -288,12 +291,14 @@ class Creature {
 		if (mousePressed) {
 			float x = (1.0f * mouseX)/SCREEN_WIDTH;
 			float y = (1.0f * mouseY)/SCREEN_HEIGHT;
-			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
-			float distSq = distSqTo(x, y);
-			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
-				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
-				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
+			if (x <= 1 && y <= 1) {
+				int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
+				float distSq = distSqTo(x, y);
+				if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
+					float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
+					forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
+					forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
+				}
 			}
 		}
 	}
@@ -302,7 +307,18 @@ class Creature {
 		return getNearestNeighbors(idx, radius, grid);
 	}
 };
+public void drawGUI() {
+	drawText(20, "# Boids: " + NUM_CREATURES);
+	drawText(50, "Flock Centering: " + (flockCenteringForce?"on":"off"));
+	drawText(70, "Velocity Matching: " + (velocityMatchingForce?"on":"off"));
+	drawText(90, "Collisions: " + (collisionAvoidanceForce?"on":"off"));
+	drawText(110, "Wandering: " + (wanderingForce?"on":"off"));
+	drawText(140, "Trail Length: " + (backgroundAlpha == 0?"Full":(backgroundAlpha == 255?"None":"Half")));
+}
 
+public void drawText(float y, String text) {
+	text(text, SCREEN_WIDTH + 5, y);
+}
 public void keyPressed() {
 	//simulation
 	if (key == ' ') {
@@ -328,13 +344,17 @@ public void keyPressed() {
 	}
 
 	if (key == 'p' || key == 'P') {
-		if (backgroundAlpha == 255) {
+		if (backgroundAlpha == 10) {
+			//if half trail, make it no trail
+			backgroundAlpha = 255;
+		}
+		else if (backgroundAlpha == 255) {
 			//if no trail, make it full trail
 			backgroundAlpha = 0;
 		}
 		else {
-			//if some trail (between 1 and 254), make it no trail
-			backgroundAlpha = 255;
+			//if full trail (between 1 and 254), make it half trail
+			backgroundAlpha = 10;
 		}
 	}
 
@@ -373,11 +393,15 @@ public void keyPressed() {
 	}
 
 	if (key >= '1' && key <= '4') {
-		println("Centering: " + (flockCenteringForce?"on":"off") +
+		println("Flock Centering: " + (flockCenteringForce?"on":"off") +
 			", Velocity matching: " + (velocityMatchingForce?"on":"off") +
 			", Collisions: " + (collisionAvoidanceForce?"on":"off") +
 			", Wandering: " + (wanderingForce?"on":"off"));
 	}
+}
+
+public void mousePressed() {
+	
 }
 HashMap flockCenterGrid;
 HashMap collisionAvoidanceGrid;
