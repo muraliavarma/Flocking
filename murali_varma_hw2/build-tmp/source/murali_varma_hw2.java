@@ -36,11 +36,11 @@ final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
 final float MOUSE_RADIUS = 0.2f;
 
-final float FLOCKING_CENTERING_WEIGHT = 0.0002f;
-final float COLLISION_AVOIDANCE_WEIGHT = 0.003f;
+final float FLOCKING_CENTERING_WEIGHT = 0.00015f;
+float COLLISION_AVOIDANCE_WEIGHT = 0.0035f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0001f;
-final float MOUSE_WEIGHT = 0.00003f;
+final float MOUSE_WEIGHT = 0.0001f;
 
 final float MIN_VELOCITY = -0.001f;
 final float MAX_VELOCITY = 0.001f;
@@ -54,9 +54,9 @@ int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;
-boolean velocityMatchingForce = false;
-boolean collisionAvoidanceForce = false;
-boolean wanderingForce = false;
+boolean velocityMatchingForce = true;
+boolean collisionAvoidanceForce = true;
+boolean wanderingForce = true;
 
 public void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -219,6 +219,13 @@ class Creature {
 		forceY = 0;
 
 		//apply the 4 forces to the creature and update its x and y velocities
+
+		if (mousePressed) {
+			COLLISION_AVOIDANCE_WEIGHT = 0.01f;
+		}
+		else {
+			COLLISION_AVOIDANCE_WEIGHT = 0.0035f;
+		}
 		if (wanderingForce) {
 			forceX = WANDERING_WEIGHT * (1 - random(2));
 			forceY = WANDERING_WEIGHT * (1 - random(2));
@@ -284,7 +291,7 @@ class Creature {
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
 			float distSq = distSqTo(x, y);
 			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = 1/(distSq + MOUSE_EPSILON);
+				float weight = 1/(sqrt(distSq) + MOUSE_EPSILON);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}

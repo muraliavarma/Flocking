@@ -110,6 +110,13 @@ class Creature {
 		forceY = 0;
 
 		//apply the 4 forces to the creature and update its x and y velocities
+
+		if (mousePressed) {
+			COLLISION_AVOIDANCE_WEIGHT = 0.01;
+		}
+		else {
+			COLLISION_AVOIDANCE_WEIGHT = 0.0035;
+		}
 		if (wanderingForce) {
 			forceX = WANDERING_WEIGHT * (1 - random(2));
 			forceY = WANDERING_WEIGHT * (1 - random(2));
@@ -175,7 +182,7 @@ class Creature {
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
 			float distSq = distSqTo(x, y);
 			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = 1/(distSq + MOUSE_EPSILON);
+				float weight = 1/(sqrt(distSq) + MOUSE_EPSILON);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}
