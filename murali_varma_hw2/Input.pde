@@ -66,4 +66,11 @@ void keyPressed() {
 	if (key == '4') {
 		wanderingForce = !wanderingForce;
 	}
+
+	if (key >= '1' && key <= '4') {
+		println("Centering: " + (flockCenteringForce?"on":"off") +
+			", Collisions: " + (velocityMatchingForce?"on":"off") +
+			", Velocity matching: " + (collisionAvoidanceForce?"on":"off") +
+			", Wandering: " + (wanderingForce?"on":"off"));
+	}
 }

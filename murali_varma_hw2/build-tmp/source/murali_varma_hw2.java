@@ -142,7 +142,17 @@ class Creature {
 
 	public void draw() {
 		fill (255);
-		arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
+		// arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
+		float s = 10;	//radius of the circuscribing circle of this isosceles triangle
+		pushMatrix();
+		translate(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY);
+		rotate(PI/2 + atan2(velY, velX));
+		// triangle(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY - s,
+		// 	SCREEN_WIDTH * posX - s * 0.707, SCREEN_HEIGHT * posY + s * 0.707,
+		// 	SCREEN_WIDTH * posX + s * 0.707, SCREEN_HEIGHT * posY + s * 0.707);
+		triangle(0, -s, -s * 0.707f, s * 0.707f, s * 0.707f, s * 0.707f);
+		translate(-SCREEN_WIDTH * posX, -SCREEN_HEIGHT * posY);
+		popMatrix();
 	}
 
 	public void update() {
@@ -354,6 +364,13 @@ public void keyPressed() {
 	}
 	if (key == '4') {
 		wanderingForce = !wanderingForce;
+	}
+
+	if (key >= '1' && key <= '4') {
+		println("Centering: " + (flockCenteringForce?"on":"off") +
+			", Collisions: " + (velocityMatchingForce?"on":"off") +
+			", Velocity matching: " + (collisionAvoidanceForce?"on":"off") +
+			", Wandering: " + (wanderingForce?"on":"off"));
 	}
 }
 HashMap flockCenterGrid;
