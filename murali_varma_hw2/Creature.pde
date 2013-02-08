@@ -108,6 +108,22 @@ class Creature {
 		return diffX * diffX + diffY * diffY;		
 	}
 
+	//this function can even be defined outside the class since it has nothing to do with the creature object, but this is easier
+	float displacement(float a, float b) {
+		if (edgeBehavior == REFLECT_MODE) {
+			return a - b;
+		}
+		float disp = abs(a - b);
+		if (disp <= 0.5) {
+			return a - b;
+		}
+		disp = 1 - disp;
+		if (a < b) {
+			return disp;
+		}
+		return -disp;
+	}
+
 	void applyForces() {
 		forceX = 0;
 		forceY = 0;
@@ -134,8 +150,8 @@ class Creature {
 				Creature neighbor = creatures[int(neighborsFC.get(i).toString())];
 				float weight = 1/(sqrt(distSqTo(neighbor.idx)) + EPSILON);
 				weightSum += weight;
-				fx += weight * (neighbor.posX - posX);
-				fy += weight * (neighbor.posY - posY);
+				fx += weight * displacement(neighbor.posX, posX);
+				fy += weight * displacement(neighbor.posY, posY);
 			}
 			weightSum /= FLOCKING_CENTERING_WEIGHT;
 			if (weightSum != 0) {
@@ -152,8 +168,8 @@ class Creature {
 				Creature neighbor = creatures[int(neighborsCA.get(i).toString())];
 				float weight = 1/(sqrt(distSqTo(neighbor.idx)) + COLLISION_EPSILON);
 				weightSum += weight;
-				fx += weight * (posX - neighbor.posX);
-				fy += weight * (posY - neighbor.posY);
+				fx += weight * displacement(posX, neighbor.posX);
+				fy += weight * displacement(posY, neighbor.posY);
 			}
 			weightSum /= COLLISION_AVOIDANCE_WEIGHT;
 			if (weightSum != 0) {
@@ -188,8 +204,8 @@ class Creature {
 				float distSq = distSqTo(x, y);
 				if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
 					float weight = min(1/(sqrt(distSq) + MOUSE_EPSILON), 20);
-					forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
-					forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
+					forceX += sign * MOUSE_WEIGHT * displacement(posX, x) * weight;
+					forceY += sign * MOUSE_WEIGHT * displacement(posY, y) * weight;
 				}
 			}
 		}
