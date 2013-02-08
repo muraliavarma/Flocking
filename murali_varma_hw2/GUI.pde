@@ -11,6 +11,9 @@ void drawGUI() {
 	drawText(300, "(c) Clear paths");
 	drawText(340, "(s) Scatter boids");
 	drawText(400, "(Space) Simulation is " + (isLoop?"playing":"paused"));
+	if (!isLoop) {
+		drawText(430, "(.) Go to next timestep");
+	}
 }
 
 void drawText(float y, String text) {

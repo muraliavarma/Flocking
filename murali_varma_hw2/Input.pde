@@ -12,10 +12,8 @@ void keyPressed() {
 		noLoop();
 	}
 	
-	if(key == '.') {
-		noLoop();
+	if(key == '.' && !isLoop) {
 		redraw();
-		isLoop = false;
 	}
 
 	//commands

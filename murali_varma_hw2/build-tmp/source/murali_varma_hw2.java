@@ -343,6 +343,9 @@ public void drawGUI() {
 	drawText(300, "(c) Clear paths");
 	drawText(340, "(s) Scatter boids");
 	drawText(400, "(Space) Simulation is " + (isLoop?"playing":"paused"));
+	if (!isLoop) {
+		drawText(430, "(.) Go to next timestep");
+	}
 }
 
 public void drawText(float y, String text) {
@@ -362,10 +365,8 @@ public void keyPressed() {
 		noLoop();
 	}
 	
-	if(key == '.') {
-		noLoop();
+	if(key == '.' && !isLoop) {
 		redraw();
-		isLoop = false;
 	}
 
 	//commands
