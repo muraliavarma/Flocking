@@ -69,8 +69,8 @@ void keyPressed() {
 
 	if (key >= '1' && key <= '4') {
 		println("Centering: " + (flockCenteringForce?"on":"off") +
-			", Collisions: " + (velocityMatchingForce?"on":"off") +
-			", Velocity matching: " + (collisionAvoidanceForce?"on":"off") +
+			", Velocity matching: " + (velocityMatchingForce?"on":"off") +
+			", Collisions: " + (collisionAvoidanceForce?"on":"off") +
 			", Wandering: " + (wanderingForce?"on":"off"));
 	}
 }
