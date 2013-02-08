@@ -40,8 +40,8 @@ final float VELOCITY_MATCHING_WEIGHT = 0.1f;
 final float WANDERING_WEIGHT = 0.0002f;
 final float MOUSE_WEIGHT = 0.00003f;
 
-final float MIN_VELOCITY = -0.005f;
-final float MAX_VELOCITY = 0.005f;
+final float MIN_VELOCITY = -0.003f;
+final float MAX_VELOCITY = 0.003f;
 
 int NUM_CREATURES = 10;
 
@@ -147,9 +147,6 @@ class Creature {
 		pushMatrix();
 		translate(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY);
 		rotate(PI/2 + atan2(velY, velX));
-		// triangle(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY - s,
-		// 	SCREEN_WIDTH * posX - s * 0.707, SCREEN_HEIGHT * posY + s * 0.707,
-		// 	SCREEN_WIDTH * posX + s * 0.707, SCREEN_HEIGHT * posY + s * 0.707);
 		triangle(0, -s, -s * 0.707f, s * 0.707f, s * 0.707f, s * 0.707f);
 		translate(-SCREEN_WIDTH * posX, -SCREEN_HEIGHT * posY);
 		popMatrix();

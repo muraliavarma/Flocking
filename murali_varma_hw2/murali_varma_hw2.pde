@@ -25,8 +25,8 @@ final float VELOCITY_MATCHING_WEIGHT = 0.1;
 final float WANDERING_WEIGHT = 0.0002;
 final float MOUSE_WEIGHT = 0.00003;
 
-final float MIN_VELOCITY = -0.005;
-final float MAX_VELOCITY = 0.005;
+final float MIN_VELOCITY = -0.003;
+final float MAX_VELOCITY = 0.003;
 
 int NUM_CREATURES = 10;
 
