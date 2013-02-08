@@ -2,13 +2,17 @@ void keyPressed() {
 	//simulation
 	if (key == ' ') {
 		isLoop = !isLoop;
+		draw();
 	}
 
 	if (isLoop) {
 		loop();
 	}
+	else {
+		noLoop();
+	}
 	
-	if(key == '.' || !isLoop) {
+	if(key == '.') {
 		noLoop();
 		redraw();
 		isLoop = false;
@@ -55,6 +59,24 @@ void keyPressed() {
 	}
 	if (key == 'r' || key == 'R') {
 		mouseMode = REPEL_MODE;
+	}
+
+	if (key == 'e') {
+		if (edgeBehavior == TOROIDAL_MODE) {
+			edgeBehavior = REFLECT_MODE;
+		}
+		else {
+			edgeBehavior = TOROIDAL_MODE;
+		}
+	}
+
+	if (key == 'b') {
+		if (boidShape == TRIANGLE_BOID) {
+			boidShape = CIRCLE_BOID;
+		}
+		else {
+			boidShape = TRIANGLE_BOID;
+		}
 	}
 
 	//forces

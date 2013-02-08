@@ -12,8 +12,6 @@ class Creature {
 	float forceX;
 	float forceY;
 
-	float radius = 10;
-
 	ArrayList neighborsFC;
 	ArrayList neighborsCA;
 	ArrayList neighborsVM;
@@ -35,14 +33,19 @@ class Creature {
 
 	void draw() {
 		fill (255);
-		// arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
-		float s = 10;	//radius of the circuscribing circle of this isosceles triangle
-		pushMatrix();
-		translate(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY);
-		rotate(PI/2 + atan2(velY, velX));
-		triangle(0, -s, -s * 0.707, s * 0.707, s * 0.707, s * 0.707);
-		translate(-SCREEN_WIDTH * posX, -SCREEN_HEIGHT * posY);
-		popMatrix();
+		if (boidShape == CIRCLE_BOID) {
+			float radius = 5;
+			arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
+		}
+		else {
+			float s = 5;	//radius of the circuscribing circle of this isosceles triangle
+			pushMatrix();
+			translate(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY);
+			rotate(PI/2 + atan2(velY, velX));
+			triangle(0, -s, -s * 0.707, s * 0.707, s * 0.707, s * 0.707);
+			translate(-SCREEN_WIDTH * posX, -SCREEN_HEIGHT * posY);
+			popMatrix();
+		}
 	}
 
 	void update() {

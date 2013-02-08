@@ -9,6 +9,9 @@ final int TOROIDAL_MODE = 1;
 final int ATTRACT_MODE = 0;
 final int REPEL_MODE = 1;
 
+final int TRIANGLE_BOID = 0;
+final int CIRCLE_BOID = 1;
+
 final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
@@ -36,6 +39,7 @@ int NUM_CREATURES = 100;
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
 int mouseMode = ATTRACT_MODE;
+int boidShape = TRIANGLE_BOID;
 int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force

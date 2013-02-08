@@ -24,6 +24,9 @@ final int TOROIDAL_MODE = 1;
 final int ATTRACT_MODE = 0;
 final int REPEL_MODE = 1;
 
+final int TRIANGLE_BOID = 0;
+final int CIRCLE_BOID = 1;
+
 final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
@@ -51,6 +54,7 @@ int NUM_CREATURES = 100;
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
 int mouseMode = ATTRACT_MODE;
+int boidShape = TRIANGLE_BOID;
 int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
@@ -123,8 +127,6 @@ class Creature {
 	float forceX;
 	float forceY;
 
-	float radius = 10;
-
 	ArrayList neighborsFC;
 	ArrayList neighborsCA;
 	ArrayList neighborsVM;
@@ -146,14 +148,19 @@ class Creature {
 
 	public void draw() {
 		fill (255);
-		// arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
-		float s = 10;	//radius of the circuscribing circle of this isosceles triangle
-		pushMatrix();
-		translate(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY);
-		rotate(PI/2 + atan2(velY, velX));
-		triangle(0, -s, -s * 0.707f, s * 0.707f, s * 0.707f, s * 0.707f);
-		translate(-SCREEN_WIDTH * posX, -SCREEN_HEIGHT * posY);
-		popMatrix();
+		if (boidShape == CIRCLE_BOID) {
+			float radius = 5;
+			arc(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY, radius, radius, 0, 2 * PI);
+		}
+		else {
+			float s = 5;	//radius of the circuscribing circle of this isosceles triangle
+			pushMatrix();
+			translate(SCREEN_WIDTH * posX, SCREEN_HEIGHT * posY);
+			rotate(PI/2 + atan2(velY, velX));
+			triangle(0, -s, -s * 0.707f, s * 0.707f, s * 0.707f, s * 0.707f);
+			translate(-SCREEN_WIDTH * posX, -SCREEN_HEIGHT * posY);
+			popMatrix();
+		}
 	}
 
 	public void update() {
@@ -308,12 +315,18 @@ class Creature {
 	}
 };
 public void drawGUI() {
-	drawText(20, "# Boids: " + NUM_CREATURES);
-	drawText(50, "Flock Centering: " + (flockCenteringForce?"on":"off"));
-	drawText(70, "Velocity Matching: " + (velocityMatchingForce?"on":"off"));
-	drawText(90, "Collisions: " + (collisionAvoidanceForce?"on":"off"));
-	drawText(110, "Wandering: " + (wanderingForce?"on":"off"));
-	drawText(140, "Trail Length: " + (backgroundAlpha == 0?"Full":(backgroundAlpha == 255?"None":"Half")));
+	drawText(20, "(+/-) # Boids: " + NUM_CREATURES);
+	drawText(50, "(1) Flock Centering: " + (flockCenteringForce?"on":"off"));
+	drawText(70, "(2) Velocity Matching: " + (velocityMatchingForce?"on":"off"));
+	drawText(90, "(3) Collisions: " + (collisionAvoidanceForce?"on":"off"));
+	drawText(110, "(4) Wandering: " + (wanderingForce?"on":"off"));
+	drawText(140, "(p) Trail Length: " + (backgroundAlpha == 0?"Full":(backgroundAlpha == 255?"None":"Half")));
+	drawText(170, "(a/r) Mouse mode: " + (mouseMode == ATTRACT_MODE?"Attraction":"Repulsion"));
+	drawText(200, "(e) Edge Behavior: " + (edgeBehavior == TOROIDAL_MODE?"Toroidal":"Reflect"));
+	drawText(230, "(b) Boid Shape: " + (boidShape == CIRCLE_BOID?"Circle":"Triangle"));
+	drawText(300, "(c) Clear paths");
+	drawText(340, "(s) Scatter boids");
+	drawText(400, "(Space) Simulation is " + (isLoop?"playing":"paused"));
 }
 
 public void drawText(float y, String text) {
@@ -323,13 +336,17 @@ public void keyPressed() {
 	//simulation
 	if (key == ' ') {
 		isLoop = !isLoop;
+		draw();
 	}
 
 	if (isLoop) {
 		loop();
 	}
+	else {
+		noLoop();
+	}
 	
-	if(key == '.' || !isLoop) {
+	if(key == '.') {
 		noLoop();
 		redraw();
 		isLoop = false;
@@ -376,6 +393,24 @@ public void keyPressed() {
 	}
 	if (key == 'r' || key == 'R') {
 		mouseMode = REPEL_MODE;
+	}
+
+	if (key == 'e') {
+		if (edgeBehavior == TOROIDAL_MODE) {
+			edgeBehavior = REFLECT_MODE;
+		}
+		else {
+			edgeBehavior = TOROIDAL_MODE;
+		}
+	}
+
+	if (key == 'b') {
+		if (boidShape == TRIANGLE_BOID) {
+			boidShape = CIRCLE_BOID;
+		}
+		else {
+			boidShape = TRIANGLE_BOID;
+		}
 	}
 
 	//forces
