@@ -28,22 +28,24 @@ final int MIN_CREATURES = 1;
 final int MAX_CREATURES = 100;
 
 final float EPSILON = 0.00001f;
+final float COLLISION_EPSILON = 0.001f;
+final float MOUSE_EPSILON = 0.001f;
 
 final float FLOCK_CENTERING_RADIUS = 0.3f;
 final float COLLISION_AVOIDANCE_RADIUS = 0.05f;
 final float VELOCITY_MATCHING_RADIUS = 0.1f;
 final float MOUSE_RADIUS = 0.2f;
 
-final float FLOCKING_CENTERING_WEIGHT = 0.0001f;
+final float FLOCKING_CENTERING_WEIGHT = 0.0002f;
 final float COLLISION_AVOIDANCE_WEIGHT = 0.003f;
 final float VELOCITY_MATCHING_WEIGHT = 0.1f;
-final float WANDERING_WEIGHT = 0.0002f;
+final float WANDERING_WEIGHT = 0.0001f;
 final float MOUSE_WEIGHT = 0.00003f;
 
-final float MIN_VELOCITY = -0.003f;
-final float MAX_VELOCITY = 0.003f;
+final float MIN_VELOCITY = -0.001f;
+final float MAX_VELOCITY = 0.001f;
 
-int NUM_CREATURES = 10;
+int NUM_CREATURES = 100;
 
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
@@ -52,9 +54,9 @@ int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
 
 //flock centering, velocity matching, collision avoidance, wandering force
 boolean flockCenteringForce = true;
-boolean velocityMatchingForce = true;
-boolean collisionAvoidanceForce = true;
-boolean wanderingForce = true;
+boolean velocityMatchingForce = false;
+boolean collisionAvoidanceForce = false;
+boolean wanderingForce = false;
 
 public void setup() {
 	size(SCREEN_WIDTH + CONTROLS_WIDTH, SCREEN_HEIGHT);
@@ -133,8 +135,8 @@ class Creature {
 	public void init() {
 		posX = random(1);
 		posY = random(1);
-		velX = WANDERING_WEIGHT * (1 - random(2));
-		velY = WANDERING_WEIGHT * (1 - random(2));
+		velX = 10 * WANDERING_WEIGHT * (1 - random(2));
+		velY = 10 * WANDERING_WEIGHT * (1 - random(2));
 
 		neighborsFC = new ArrayList();
 		neighborsCA = new ArrayList();		
@@ -228,7 +230,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsFC.size(); i++) {
 				Creature neighbor = creatures[PApplet.parseInt(neighborsFC.get(i).toString())];
-				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
+				float weight = 1/(sqrt(distSqTo(neighbor.idx)) + EPSILON);
 				weightSum += weight;
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
@@ -246,7 +248,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsCA.size(); i++) {
 				Creature neighbor = creatures[PApplet.parseInt(neighborsCA.get(i).toString())];
-				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
+				float weight = 1/(sqrt(distSqTo(neighbor.idx)) + COLLISION_EPSILON);
 				weightSum += weight;
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
@@ -280,9 +282,9 @@ class Creature {
 			float x = (1.0f * mouseX)/SCREEN_WIDTH;
 			float y = (1.0f * mouseY)/SCREEN_HEIGHT;
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
-			float dist = distSqTo(x, y);
-			if (dist < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = 1/(dist + EPSILON);
+			float distSq = distSqTo(x, y);
+			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
+				float weight = 1/(distSq + MOUSE_EPSILON);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}

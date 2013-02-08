@@ -26,8 +26,8 @@ class Creature {
 	void init() {
 		posX = random(1);
 		posY = random(1);
-		velX = WANDERING_WEIGHT * (1 - random(2));
-		velY = WANDERING_WEIGHT * (1 - random(2));
+		velX = 10 * WANDERING_WEIGHT * (1 - random(2));
+		velY = 10 * WANDERING_WEIGHT * (1 - random(2));
 
 		neighborsFC = new ArrayList();
 		neighborsCA = new ArrayList();		
@@ -121,7 +121,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsFC.size(); i++) {
 				Creature neighbor = creatures[int(neighborsFC.get(i).toString())];
-				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
+				float weight = 1/(sqrt(distSqTo(neighbor.idx)) + EPSILON);
 				weightSum += weight;
 				fx += weight * (neighbor.posX - posX);
 				fy += weight * (neighbor.posY - posY);
@@ -139,7 +139,7 @@ class Creature {
 			float fy = 0;
 			for (int i = 0; i < neighborsCA.size(); i++) {
 				Creature neighbor = creatures[int(neighborsCA.get(i).toString())];
-				float weight = 1/(distSqTo(neighbor.idx) + EPSILON);
+				float weight = 1/(sqrt(distSqTo(neighbor.idx)) + COLLISION_EPSILON);
 				weightSum += weight;
 				fx += weight * (posX - neighbor.posX);
 				fy += weight * (posY - neighbor.posY);
@@ -173,9 +173,9 @@ class Creature {
 			float x = (1.0 * mouseX)/SCREEN_WIDTH;
 			float y = (1.0 * mouseY)/SCREEN_HEIGHT;
 			int sign = mouseMode == ATTRACT_MODE ? -1 : 1;
-			float dist = distSqTo(x, y);
-			if (dist < MOUSE_RADIUS * MOUSE_RADIUS) {
-				float weight = 1/(dist + EPSILON);
+			float distSq = distSqTo(x, y);
+			if (distSq < MOUSE_RADIUS * MOUSE_RADIUS) {
+				float weight = 1/(distSq + MOUSE_EPSILON);
 				forceX += sign * MOUSE_WEIGHT * (posX - x) * weight;
 				forceY += sign * MOUSE_WEIGHT * (posY - y) * weight;
 			}
