@@ -59,14 +59,14 @@ void keyPressed() {
 		mouseMode = REPEL_MODE;
 	}
 
-	if (key == 'e') {
-		if (edgeBehavior == TOROIDAL_MODE) {
-			edgeBehavior = REFLECT_MODE;
-		}
-		else {
-			edgeBehavior = TOROIDAL_MODE;
-		}
-	}
+	// if (key == 'e') {
+	// 	if (edgeBehavior == TOROIDAL_MODE) {
+	// 		edgeBehavior = REFLECT_MODE;
+	// 	}
+	// 	else {
+	// 		edgeBehavior = TOROIDAL_MODE;
+	// 	}
+	// }
 
 	if (key == 'b') {
 		if (boidShape == TRIANGLE_BOID) {

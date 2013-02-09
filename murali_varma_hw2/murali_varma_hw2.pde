@@ -37,7 +37,7 @@ final float MAX_VELOCITY = 0.001;
 int NUM_CREATURES = 75;
 
 boolean isLoop = true;
-int edgeBehavior = TOROIDAL_MODE;
+int edgeBehavior = REFLECT_MODE;
 int mouseMode = ATTRACT_MODE;
 int boidShape = TRIANGLE_BOID;
 int backgroundAlpha = 10;	//0 for full trail, 255 for no trail
