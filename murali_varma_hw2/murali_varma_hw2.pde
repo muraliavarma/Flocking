@@ -26,7 +26,7 @@ final float MOUSE_RADIUS = 0.3;
 
 final float FLOCKING_CENTERING_WEIGHT = 0.00015;
 float COLLISION_AVOIDANCE_WEIGHT = 0.0035;
-final float VELOCITY_MATCHING_WEIGHT = 0.1;
+final float VELOCITY_MATCHING_WEIGHT = 0.05;
 final float WANDERING_WEIGHT = 0.0001;
 final float MOUSE_WEIGHT = 0.0001;
 
@@ -34,7 +34,7 @@ final float MIN_VELOCITY = -0.001;
 final float MAX_VELOCITY = 0.001;
 
 //variables
-int NUM_CREATURES = 100;
+int NUM_CREATURES = 75;
 
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
