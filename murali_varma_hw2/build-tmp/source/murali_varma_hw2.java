@@ -49,7 +49,7 @@ final float MIN_VELOCITY = -0.001f;
 final float MAX_VELOCITY = 0.001f;
 
 //variables
-int NUM_CREATURES = 2;
+int NUM_CREATURES = 75;
 
 boolean isLoop = true;
 int edgeBehavior = TOROIDAL_MODE;
@@ -510,11 +510,30 @@ public ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
-			//this is valid only for reflecting walls
-			if (x + i < 0 || y + j < 0 || x + i > 1.0f/radius || y + j > 1.0f/radius) {
-				continue;
+			int newX = x + i;
+			int newY = y + j;
+			if (edgeBehavior == REFLECT_MODE) {
+				//this is valid only for reflecting walls
+				if (newX < 0 || newY < 0 || newX > 1.0f/radius || newY > 1.0f/radius) {
+					continue;
+				}
 			}
-			ArrayList cellCreatures = (ArrayList)grid.get((x + i) + "," + (y + j));
+			else {
+				if (newX < 0) {
+					newX = newX + 1;
+				}
+				if (newY < 0) {
+					newY = newY + 1;
+				}
+				if (newX > 1.0f/radius) {
+					newX = PApplet.parseInt(newX - 1.0f/radius);
+				}
+				if (newY > 1.0f/radius) {
+					newY = PApplet.parseInt(newY - 1.0f/radius);
+				}
+
+			}
+			ArrayList cellCreatures = (ArrayList)grid.get(newX + "," + newY);
 			if (cellCreatures == null) {
 				continue;
 			}

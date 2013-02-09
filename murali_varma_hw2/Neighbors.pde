@@ -53,11 +53,30 @@ ArrayList getNearestNeighbors(int idx, float radius, HashMap grid) {
 
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
-			//this is valid only for reflecting walls
-			if (x + i < 0 || y + j < 0 || x + i > 1.0/radius || y + j > 1.0/radius) {
-				continue;
+			int newX = x + i;
+			int newY = y + j;
+			if (edgeBehavior == REFLECT_MODE) {
+				//this is valid only for reflecting walls
+				if (newX < 0 || newY < 0 || newX > 1.0/radius || newY > 1.0/radius) {
+					continue;
+				}
 			}
-			ArrayList cellCreatures = (ArrayList)grid.get((x + i) + "," + (y + j));
+			else {
+				if (newX < 0) {
+					newX = newX + 1;
+				}
+				if (newY < 0) {
+					newY = newY + 1;
+				}
+				if (newX > 1.0/radius) {
+					newX = int(newX - 1.0/radius);
+				}
+				if (newY > 1.0/radius) {
+					newY = int(newY - 1.0/radius);
+				}
+
+			}
+			ArrayList cellCreatures = (ArrayList)grid.get(newX + "," + newY);
 			if (cellCreatures == null) {
 				continue;
 			}
